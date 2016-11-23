@@ -285,7 +285,7 @@ class ServiceInfo(Screen):
 						(_("Modulation"), frontendData["modulation"], TYPE_TEXT),
 						(_("Orbital position"), frontendData["orbital_position"], TYPE_VALUE_DEC),
 						(_("Frequency"), frontendData["frequency"], TYPE_VALUE_FREQ),
-						(_("Symbol rate"), frontendData["symbol_rate"], TYPE_VALUE_BITRATE),
+						(_("Symbol rate"), frontendData["symbol_rate"], TYPE_VALUE_DEC),
 						(_("Polarization"), frontendData["polarization"], TYPE_TEXT),
 						(_("Inversion"), frontendData["inversion"], TYPE_TEXT),
 						(_("FEC"), frontendData["fec_inner"], TYPE_TEXT),
@@ -299,7 +299,7 @@ class ServiceInfo(Screen):
 						(_("Type"), frontendData["tuner_type"], TYPE_TEXT),
 						(_("Modulation"), frontendData["modulation"], TYPE_TEXT),
 						(_("Frequency"), frontendData["frequency"], TYPE_VALUE_FREQ_FLOAT),
-						(_("Symbol rate"), frontendData["symbol_rate"], TYPE_VALUE_BITRATE),
+						(_("Symbol rate"), frontendData["symbol_rate"], TYPE_VALUE_DEC),
 						(_("Inversion"), frontendData["inversion"], TYPE_TEXT),
 						(_("FEC"), frontendData["fec_inner"], TYPE_TEXT))
 			elif frontendDataOrg["tuner_type"] == "DVB-T":
