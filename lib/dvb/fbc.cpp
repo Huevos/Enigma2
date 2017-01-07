@@ -6,7 +6,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <iostream>
+#include <ios>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
