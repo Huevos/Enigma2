@@ -18,7 +18,7 @@ int eFBCTunerManager::ReadProcInt(int fe_index, const std::string & entry)
 	std::ifstream file;
 
 	path << "/proc/stb/frontend/" << fe_index << "/" << entry;
-	file.open(path.str());
+	file.open(path.str().c_str());
 
 	if(!file.is_open())
 		return(-1);
@@ -37,7 +37,7 @@ void eFBCTunerManager::WriteProcInt(int fe_index, const std::string & entry, int
 	std::ofstream file;
 
 	path << "/proc/stb/frontend/" << fe_index << "/" << entry;
-	file.open(path.str());
+	file.open(path.str().c_str());
 
 	if(!file.is_open())
 		return;
@@ -54,7 +54,7 @@ void eFBCTunerManager::LoadConnectChoices(int fe_index, connect_choices_t &choic
 	int fbc_id;
 
 	path << "/proc/stb/frontend/"  << fe_index << "/fbc_connect_choices";
-	file.open(path.str());
+	file.open(path.str().c_str());
 
 	if(!file.is_open())
 		return;
