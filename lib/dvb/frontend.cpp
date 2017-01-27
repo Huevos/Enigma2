@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
+#include <time.h>
 
 #include <sstream>
 
@@ -780,6 +781,13 @@ void eDVBFrontend::feEvent(int w)
 		sec_fe = linked_fe->m_frontend;
 		sec_fe->getData(LINKED_NEXT_PTR, tmp);
 	}
+
+	time_t tune_start, tune_current;
+	double tune_max_sec = 6.0;
+	double tune_sec;
+
+	time(&tune_start);
+
 	while (1)
 	{
 		dvb_frontend_event event;
@@ -802,7 +810,9 @@ void eDVBFrontend::feEvent(int w)
 		{
 			if (m_tuning) {
 				state = stateTuning;
-				if (event.status & FE_TIMEDOUT) {
+				time(&tune_current);
+				tune_sec = difftime(tune_current, tune_start);
+				if ((event.status & FE_TIMEDOUT) || (tune_sec > tune_max_sec)) {
 					eDebug("[eDVBFrontend] FE_TIMEDOUT! ..abort");
 					m_tuneTimer->stop();
 					timeout();
