@@ -93,12 +93,12 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 			fallbackAddressTypeDefault = "ip"
 		self.fallbackAddressType = ConfigSelection(default = fallbackAddressTypeDefault, choices = fallbackAddressChoices)
 
-		self.enabledEntry = getConfigListEntry(_("Enable fallback remote receiver"), self.enabled,_('Enable the use of the tuners of a remote enigma2 receiver when no local tuner is available (e.g. when the tuner is occupied or service type is unavailable on the local tuner).'))
-		self.addressTypeEntry = getConfigListEntry(_("Type"), self.fallbackAddressType,_("Select between 'Network peer', 'IP address', or manual text entry of the remote receiver URL."))
-		self.peerEntry = self.peer and getConfigListEntry(_("Fallback remote receiver URL"), self.peer,_("Select between 'Network peer', 'IP address', or manual text entry of the remote receiver address."))
-		self.ipEntry = getConfigListEntry(_("Fallback receiver IP address"), self.ip,_("Enter the IP address of the fallback receiver."))
-		self.domainEntry = getConfigListEntry(_("Fallback remote receiver URL"), self.domain,_("Enter the URL/IP of the fallback remote receiver, e.g. '192.168.0.1'. The other details such as http:// and the default port number will be filled in automatically when you select save."))
-		self.portEntry = getConfigListEntry(_("Fallback receiver streaming port"), self.port,_("Enter the streaming port of the fallback receiver (normally '%d').") % self.portDefault)
+		self.enabledEntry = getConfigListEntry(_("Enable fallback remote receiver"), self.enabled,_('Enable usage of tuners from another Enigma2 receiver on the local network. Remote tuners will be used when tuners are not available on this receiver. (No free tuner or service type is not available.)'))
+		self.addressTypeEntry = getConfigListEntry(_("Fallback address type"), self.fallbackAddressType,_("'Network peer' automatically detects other Enigma2 receivers on the local network. You can also manually enter the URL or IP address."))
+		self.peerEntry = self.peer and getConfigListEntry(_("Network peers"), self.peer,_("Select a receiver to use for fallback tuners. If the host receiver is not listed, manually enter the URL or IP address"))
+		self.ipEntry = getConfigListEntry(_("Fallback receiver IP address"), self.ip,_("Enter the IP address of the receiver to use for fallback tuners."))
+		self.domainEntry = getConfigListEntry(_("Fallback remote receiver URL"), self.domain,_("Enter the URL/IP of the fallback remote receiver, e.g. '192.168.0.1'. The other details such as 'http://' and port number will be filled in automatically when you select save."))
+		self.portEntry = getConfigListEntry(_("Fallback receiver streaming port"), self.port,_("Default port is '%d'. Change if required.") % self.portDefault)
 
 	def createSetup(self, ConfigElement=None):
 		self.list = [self.enabledEntry]
@@ -119,7 +119,8 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 		self["description"].setText(self["config"].getCurrent()[2])
 
 	def changedEntry(self):
-		self.createSetup()
+		if self["config"].getCurrent() in (self.enabledEntry, self.addressTypeEntry): # only do screen refresh if current entry requires this
+			self.createSetup()
 		for x in self.onChangedEntry:
 			x()
 
