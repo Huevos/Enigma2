@@ -156,7 +156,7 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 		if answer:
 			self.close(False)
 
-	def check_URL_format(fallbackURL):
+	def check_URL_format(self, fallbackURL):
 		if fallbackURL:
 			fallbackURL = "%s%s" % (not fallbackURL.startswith("http://") and "http://" or "", fallbackURL)
 			fallbackURL = "%s%s" % (fallbackURL, fallbackURL.count(":") == 1 and ":%s" % self.portDefault or "")
