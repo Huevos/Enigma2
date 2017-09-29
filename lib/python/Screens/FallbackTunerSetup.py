@@ -1,17 +1,20 @@
 from Screens.Screen import Screen
 from Components.Label import Label
 from Components.ActionMap import ActionMap
+from Components.Pixmap import Pixmap
+from Components.Sources.Boolean import Boolean
 from Components.Sources.StaticText import StaticText
 from Components.config import config, configfile, ConfigText, ConfigSubsection, ConfigSelection, ConfigIP, ConfigYesNo, ConfigInteger, getConfigListEntry
 from Components.ConfigList import ConfigListScreen
 from Screens.MessageBox import MessageBox
+from Screens.HelpMenu import HelpableScreen
 
 from enigma import getPeerStreamingBoxes
 
 import re
 
 class FallbackTunerSetup(ConfigListScreen, Screen):
-	def __init__(self, session):
+	def __init__(self, session, menu_path=""):
 		Screen.__init__(self, session)
 		self.setup_title = screentitle = _("Fallback tuner setup")
 		if config.usage.show_menupath.value == 'large':
@@ -42,9 +45,11 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 		self["key_green"] = StaticText(_("Save"))
 
 		self["description"] = Label("")
+		self["VKeyIcon"] = Boolean(False)
+		self["HelpWindow"] = Pixmap()
+		self["HelpWindow"].hide()
 
 		self.createConfig()
-
 		self.createSetup()
 
 		if not self.selectionChanged in self["config"].onSelectionChanged:
@@ -75,9 +80,9 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 			if result is not None:
 				portDefault = int(result.group(1))
 		self.ip = ConfigIP( default = ipDefault, auto_jump=True)
-		
+
 		self.port = ConfigInteger(default = portDefault, limits=(1,65535))
-		
+
 		fallbackAddressChoices = [("ip", _("IP")), ("domain", _("URL"))]
 		if self.peerExist:
 			fallbackAddressChoices.append(("peer", _("Network peer")))
@@ -87,16 +92,13 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 		if ipDefault != [0,0,0,0]:
 			fallbackAddressTypeDefault = "ip"
 		self.fallbackAddressType = ConfigSelection(default = fallbackAddressTypeDefault, choices = fallbackAddressChoices)
-		
+
 		self.enabledEntry = getConfigListEntry(_("Enable fallback remote receiver"), self.enabled,_('Enable the use of the tuners of a remote enigma2 receiver when no local tuner is available (e.g. when the tuner is occupied or service type is unavailable on the local tuner).'))
 		self.addressTypeEntry = getConfigListEntry(_("Type"), self.fallbackAddressType,_("Select between 'Network peer', 'IP address', or manual text entry of the remote receiver URL."))
 		self.peerEntry = self.peer and getConfigListEntry(_("Fallback remote receiver URL"), self.peer,_("Select between 'Network peer', 'IP address', or manual text entry of the remote receiver address."))
 		self.ipEntry = getConfigListEntry(_("Fallback receiver IP address"), self.ip,_("Enter the IP address of the fallback receiver."))
 		self.domainEntry = getConfigListEntry(_("Fallback remote receiver URL"), self.domain,_("Enter the URL/IP of the fallback remote receiver, e.g. '192.168.0.1'. The other details such as http:// and the default port number will be filled in automatically when you select save."))
 		self.portEntry = getConfigListEntry(_("Fallback receiver streaming port"), self.port,_("Enter the streaming port of the fallback receiver (normally '%d').") % self.portDefault)
-		
-		for x in (self.enabled, self.fallbackAddressType):
-			x.addNotifier(self.createSetup, initial_call = False)
 
 	def createSetup(self, ConfigElement=None):
 		self.list = [self.enabledEntry]
@@ -109,15 +111,15 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 				self.list.append(self.portEntry)
 			else:
 				self.list.append(self.domainEntry)
-				
+
 		self["config"].list = self.list
 		self["config"].l.setList(self.list)
 
 	def selectionChanged(self):
 		self["description"].setText(self["config"].getCurrent()[2])
 
-	# for summary:
 	def changedEntry(self):
+		self.createSetup()
 		for x in self.onChangedEntry:
 			x()
 
