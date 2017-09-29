@@ -32,7 +32,8 @@
 				<item weight="3" text="Tuner setup" entryID="client_mode" requires="ClientModeEnabled"><screen module="ClientMode" screen="ClientModeScreen"/></item>
 				<item weight="20" text="Automatic scan" entryID="auto_scan" requires="ClientModeDisabled"><screen module="ScanSetup" screen="ScanSimple"/></item>
 				<item weight="30" text="Manual scan" entryID="manual_scan" requires="ClientModeDisabled"><screen module="ScanSetup"/></item>
-				<item weight="100" text="Fallback configuration" entryID="fallback_setup" requires="ClientModeDisabled"><setup id="fallback"/></item>
+				<!--<item weight="100" text="Fallback configuration" entryID="fallback_setup" requires="ClientModeDisabled"><setup id="fallback"/></item>-->
+				<item weight="100" text="Fallback configuration" entryID="fallback_setup" requires="ClientModeDisabled"><setup  module="FallbackTunerSetup" screen="FallbackTunerSetup"/></item>
 			</menu>
 			<!-- Menu / Setup / EPG -->
 			<menu weight="3" text="EPG" entryID="epg_menu">
