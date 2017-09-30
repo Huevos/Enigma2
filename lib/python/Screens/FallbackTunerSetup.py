@@ -56,9 +56,7 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 			self["config"].onSelectionChanged.append(self.selectionChanged)
 		self.selectionChanged()
 
-	def createConfig(self): # fallbackAddressType
-		# config.usage.remote_fallback_enabled
-		# config.usage.remote_fallback
+	def createConfig(self):
 		self.enabled = ConfigYesNo(default = config.usage.remote_fallback_enabled.value)
 		self.domain = ConfigText(default = config.usage.remote_fallback.value, fixed_size = False)
 		peerStreamingBoxes = getPeerStreamingBoxes()
@@ -100,7 +98,7 @@ class FallbackTunerSetup(ConfigListScreen, Screen):
 		self.domainEntry = getConfigListEntry(_("Fallback remote receiver URL"), self.domain,_("Enter the URL/IP of the fallback remote receiver, e.g. '192.168.0.1'. The other details such as 'http://' and port number will be filled in automatically when you select save."))
 		self.portEntry = getConfigListEntry(_("Fallback receiver streaming port"), self.port,_("Default port is '%d'. Change if required.") % self.portDefault)
 
-	def createSetup(self, ConfigElement=None):
+	def createSetup(self):
 		self.list = [self.enabledEntry]
 		if self.enabled.value:
 			self.list.append(self.addressTypeEntry)
