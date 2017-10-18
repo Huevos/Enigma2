@@ -544,18 +544,42 @@ class Satfinder(ScanSetup, ServiceScan):
 
 	def dvb_read_stream(self):
 		print "[satfinder][dvb_read_stream] starting"
-		#self["introduction"].setText("")
 		self["tsid"].setText("")
 		self["onid"].setText("")
+		thread.start_new_thread(self.getCurrentTsidOnid, (True,))
+
+	def getCurrentTsidOnid(self, from_retune = False):
+		self.currentProcess = currentProcess = datetime.datetime.now()
 		self["pos"].setText(self.DVB_type.value)
 		self["key_yellow"].setText("")
-		self.currentProcess = currentProcess = datetime.datetime.now()
-		thread.start_new_thread(self.getCurrentTsidOnid, (currentProcess,))
-
-	def getCurrentTsidOnid(self, currentProcess):
 		self.serviceList = []
 		if not dvbreader_available or self.frontend is None:
 			return
+
+		if from_retune: # give the tuner a chance to retune or we will be reading the old stream
+			time.sleep(1.0)
+
+		lock_timeout = 120
+
+		timeout = datetime.datetime.now()
+		timeout += datetime.timedelta(0, lock_timeout)
+
+		while True: # check tuner lock loop
+			if datetime.datetime.now() > timeout:
+				print "[Satfinder][getCurrentTsidOnid] tuner lock timeout reached"
+				return
+
+			frontendStatus = {}
+			self.frontend.getFrontendStatus(frontendStatus)
+			if frontendStatus["tuner_state"] == "FAILED":
+				print "[Satfinder][getCurrentTsidOnid] TUNING FAILED FATAL"
+				return
+
+			if not frontendStatus["tuner_locked"]:
+				time.sleep(0.2)
+				continue
+
+			break
 
 		adapter = 0
 		demuxer_device = "/dev/dvb/adapter%d/demux%d" % (adapter, self.demux)
@@ -588,8 +612,13 @@ class Satfinder(ScanSetup, ServiceScan):
 
 			if self.currentProcess != currentProcess:
 				dvbreader.close(fd)
-				print "[satfinder][getCurrentTsidOnid] killed: %s, currentProcess: %s" % (currentProcess, self.currentProcess)
 				return
+
+			frontendStatus = {}
+			self.frontend.getFrontendStatus(frontendStatus)
+			if not frontendStatus["tuner_locked"]: # dont even try to read the transport stream if tuner is not locked
+				time.sleep(1.0)
+				continue
 
 			section = dvbreader.read_sdt(fd, sdt_current_table_id, 0x00)
 			if section is None:
@@ -623,7 +652,7 @@ class Satfinder(ScanSetup, ServiceScan):
 		dvbreader.close(fd)
 
 		if not sdt_current_content:
-			print "[Satfinder][keyReadServices] no services found on transponder"
+			print "[Satfinder][getCurrentTsidOnid] no services found on transponder"
 			return
 
 		for i in range(len(sdt_current_content)):
@@ -634,12 +663,57 @@ class Satfinder(ScanSetup, ServiceScan):
 		if self.serviceList:
 			self["key_yellow"].setText(_("Service list"))
 
+		thread.start_new_thread(self.stream_autopoller, (currentProcess,))
+
 		self.getOrbPosFromNit(currentProcess)
-		if self.orb_pos:
-			self["pos"].setText(_("%s") % self.orb_pos)
-			#self["introduction"].setText("TSID: %d, ONID: %d, %s" % (self.tsid, self.onid, self.orb_pos))
+
+	def stream_autopoller(self, currentProcess):
+		adapter = 0
+		demuxer_device = "/dev/dvb/adapter%d/demux%d" % (adapter, self.demux)
+
+		sdt_pid = 0x11
+		sdt_current_table_id = 0x42
+		mask = 0xff
+
+		fd = dvbreader.open(demuxer_device, sdt_pid, sdt_current_table_id, mask, self.feid)
+		if fd < 0:
+			print "[Satfinder][stream_autopoller] Cannot open the demuxer"
+			return None
+
+		while True:
+			if self.currentProcess != currentProcess:
+				dvbreader.close(fd)
+				return
+
+			frontendStatus = {}
+			self.frontend.getFrontendStatus(frontendStatus)
+			if not frontendStatus["tuner_locked"]: # dont even try to read the transport stream if tuner is not locked
+				time.sleep(1.0)
+				continue
+
+			section = dvbreader.read_sdt(fd, sdt_current_table_id, 0x00)
+			if section is None:
+				time.sleep(1.0)	# no data.. so we wait a sec
+				continue
+
+			if section["header"]["table_id"] == sdt_current_table_id:
+				if self.onid != section["header"]["original_network_id"] or self.tsid != section["header"]["transport_stream_id"]: # not same transponder as before, dish must have moved
+					self.onid = section["header"]["original_network_id"]
+					self.tsid = section["header"]["transport_stream_id"]
+					self["tsid"].setText("%d" % (section["header"]["transport_stream_id"]))
+					self["onid"].setText("%d" % (section["header"]["original_network_id"]))
+					self["pos"].setText(self.DVB_type.value)
+					print "[Satfinder][stream_autopoller] tsid %d, onid %d" % (section["header"]["transport_stream_id"], section["header"]["original_network_id"])
+					break
+
+		dvbreader.close(fd)
+
+		self.getCurrentTsidOnid(False)
 
 	def getOrbPosFromNit(self, currentProcess):
+		if self.DVB_type.value != "DVB-S":
+			return
+
 		if not dvbreader_available:
 			return
 
@@ -649,7 +723,6 @@ class Satfinder(ScanSetup, ServiceScan):
 			print "[Satfinder][getOrbPosFromNit] Demux not allocated"
 			return
 
-		self.orb_pos = ''
 		adapter = 0
 		demuxer_device = "/dev/dvb/adapter%d/demux%d" % (adapter, self.demux)
 
@@ -686,6 +759,12 @@ class Satfinder(ScanSetup, ServiceScan):
 				dvbreader.close(fd)
 				return
 
+			frontendStatus = {}
+			self.frontend.getFrontendStatus(frontendStatus)
+			if not frontendStatus["tuner_locked"]: # dont even try to read the transport stream if tuner is not locked
+				time.sleep(1.0)
+				continue
+
 			section = dvbreader.read_nit(fd, nit_current_table_id, nit_other_table_id)
 			if section is None:
 				time.sleep(0.1)	# no data.. so we wait a bit
@@ -716,8 +795,9 @@ class Satfinder(ScanSetup, ServiceScan):
 
 		transponders = [t for t in nit_current_content if "descriptor_tag" in t and t["descriptor_tag"] == 0x43 and t["original_network_id"] == self.onid and t["transport_stream_id"] == self.tsid]
 		if transponders and "orbital_position" in transponders[0]:
-			self.orb_pos = self.getOrbitalPosition(transponders[0]["orbital_position"], transponders[0]["west_east_flag"])
-			print "[satfinder][getOrbPosFromNit] self.orb_pos", self.orb_pos
+			orb_pos = self.getOrbitalPosition(transponders[0]["orbital_position"], transponders[0]["west_east_flag"])
+			self["pos"].setText(_("%s") % orb_pos)
+			print "[satfinder][getOrbPosFromNit] orb_pos", orb_pos
 		else:
 			print "[satfinder][getOrbPosFromNit] no orbital position found"
 
