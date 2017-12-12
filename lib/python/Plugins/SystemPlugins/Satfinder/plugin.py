@@ -657,6 +657,8 @@ class Satfinder(ScanSetup, ServiceScan):
 		for i in range(len(sdt_current_content)):
 			if not sdt_current_content[i]["service_name"]: # if service name is empty use SID
 				sdt_current_content[i]["service_name"] = "0x%x" % sdt_current_content[i]["service_id"]
+			else:
+				sdt_current_content[i]["service_name"] = sdt_current_content[i]["service_name"].decode("latin-1", errors="ignore").encode("utf8") 
 
 		self.serviceList = sorted(sdt_current_content, key=lambda listItem: listItem["service_name"])
 		if self.serviceList:
