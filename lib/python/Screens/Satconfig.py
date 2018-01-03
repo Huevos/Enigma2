@@ -80,7 +80,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 
 	def createConfigMode(self):
 		if self.nim.isCompatible("DVB-S"):
-			choices = {"nothing": _("Not configured"),
+			choices = {"nothing": _("Diasbled"),
 						"simple": _("Simple"),
 						"advanced": _("Advanced")}
 			if len(nimmanager.canEqualTo(self.slotid)) > 0:
