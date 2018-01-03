@@ -145,11 +145,11 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 			self.list.append(self.multiType)
 
 		if self.nim.isCompatible("DVB-S"):
-			self.configMode = getConfigListEntry(_("Configuration mode"), self.nimConfig.configMode)
+			self.configMode = getConfigListEntry(_("Configuration mode"), self.nimConfig.configMode, _("Disable or configure tuner using simple or advanced options"))
 			self.list.append(self.configMode)
 
 			if self.nimConfig.configMode.value == "simple":			#simple setup
-				self.diseqcModeEntry = getConfigListEntry(pgettext("Satellite configuration mode", "Mode"), self.nimConfig.diseqcMode)
+				self.diseqcModeEntry = getConfigListEntry(pgettext("Satellite configuration mode", "Mode"), self.nimConfig.diseqcMode,_("Select how the satellite is configured. DiSEqC switch, positioner, etc"))
 				self.list.append(self.diseqcModeEntry)
 				if self.nimConfig.diseqcMode.value in ("single", "toneburst_a_b", "diseqc_a_b", "diseqc_a_b_c_d"):
 					self.createSimpleSetup(self.list, self.nimConfig.diseqcMode.value)
@@ -181,7 +181,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 				pass
 			elif self.nimConfig.configMode.value == "advanced": # advanced
 				# SATs
-				self.advancedSatsEntry = getConfigListEntry(_("Satellite"), self.nimConfig.advanced.sats)
+				self.advancedSatsEntry = getConfigListEntry(_("Satellite"), self.nimConfig.advanced.sats, _("Select the satellite"))
 				self.list.append(self.advancedSatsEntry)
 				current_config_sats = self.nimConfig.advanced.sats.value
 				if current_config_sats in ("3605", "3606"):
@@ -306,7 +306,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 			self.have_advanced = False
 
 		if config.usage.setup_level.index > 1:
-			self.list.append(getConfigListEntry(_("Force Legacy Signal Stats"), self.nimConfig.force_legacy_signal_stats))
+			self.list.append(getConfigListEntry(_("Force Legacy Signal Stats"), self.nimConfig.force_legacy_signal_stats, _("Use API V3 for tuner signal values. This is an older standard. Setting is set for each tuner separately")))
 
 		self["config"].list = self.list
 		self["config"].l.setList(self.list)
