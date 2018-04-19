@@ -187,6 +187,12 @@ class ConfigElement(object):
 		if not self.last_value == self.value:
 			self.last_value = self.value
 
+	def hideHelp(self, session):
+		pass
+
+	def showHelp(self, session):
+		pass
+
 KEY_LEFT = 0
 KEY_RIGHT = 1
 KEY_OK = 2
@@ -1286,7 +1292,15 @@ class ConfigText(ConfigElement, NumericalTextInput):
 			self.changedFinal()
 			self.last_value = self.value
 
-	def getHTML(self, id):
+	def hideHelp(self, session):
+		if session is not None and self.help_window is not None:
+			self.help_window.hide()
+
+	def showHelp(self, session):
+		if session is not None and self.help_window is not None:
+			self.help_window.show()
+
+ 	def getHTML(self, id):
 		return '<input type="text" name="' + id + '" value="' + self.value + '" /><br>\n'
 
 	def unsafeAssign(self, value):

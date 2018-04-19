@@ -84,13 +84,21 @@ class ConfigList(GUIComponent, object):
 		for x in self.onSelectionChanged:
 			x()
 
+	def hideHelp(self):
+ 		if isinstance(self.current, tuple) and len(self.current) >= 2:
+			self.current[1].hideHelp(self.session)
+ 
+	def showHelp(self):
+ 		if isinstance(self.current, tuple) and len(self.current) >= 2:
+			self.current[1].showHelp(self.session)
+
 	def postWidgetCreate(self, instance):
 		instance.selectionChanged.get().append(self.selectionChanged)
 		instance.setContent(self.l)
 		self.instance.setWrapAround(True)
 
 	def preWidgetRemove(self, instance):
-		if isinstance(self.current,tuple) and len(self.current) >= 2:
+		if isinstance(self.current, tuple) and len(self.current) >= 2:
 			self.current[1].onDeselect(self.session)
 		instance.selectionChanged.get().remove(self.selectionChanged)
 		instance.setContent(None)
@@ -179,7 +187,11 @@ class ConfigListScreen:
 		if not self.handleInputHelpers in self["config"].onSelectionChanged:
 			self["config"].onSelectionChanged.append(self.handleInputHelpers)
 
-		self.onClose.append(self.HideHelp)
+#		self.onClose.append(self.__onClose)
+
+#	def __onClose(self):
+#		if "config" in self:
+#			self["config"].hideHelp()
 
 	def createSummary(self):
 		self.setup_title = self.getTitle()
@@ -220,29 +232,15 @@ class ConfigListScreen:
 				self["VKeyIcon"].boolean = False
 
 	def KeyText(self):
-		self.HideHelp()
+		self["config"].hideHelp()
 		from Screens.VirtualKeyBoard import VirtualKeyBoard
 		self.session.openWithCallback(self.VirtualKeyBoardCallback, VirtualKeyBoard, title = self["config"].getCurrent()[0], text = self["config"].getCurrent()[1].value)
-
-	def HideHelp(self):
-		try:
-			if self["config"].getCurrent()[1].__class__.__name__ in ('ConfigText', 'ConfigPassword'):
-				self["config"].getCurrent()[1].help_window.hide()
-		except:
-			pass
-
-	def ShowHelp(self):
-		try:
-			if self["config"].getCurrent()[1].__class__.__name__ in ('ConfigText', 'ConfigPassword'):
-				self["config"].getCurrent()[1].help_window.show()
-		except:
-			pass
 
 	def VirtualKeyBoardCallback(self, callback = None):
 		if callback is not None and len(callback):
 			self["config"].getCurrent()[1].setValue(callback)
 			self["config"].invalidate(self["config"].getCurrent())
-		self.ShowHelp()
+		self["config"].showHelp()
 
 	def keyOK(self):
 		self["config"].handleKey(KEY_OK)
@@ -316,7 +314,7 @@ class ConfigListScreen:
 
 	def cancelConfirm(self, result):
 		if not result:
-			self.ShowHelp()
+			self["config"].showHelp()
 			return
 
 		for x in self["config"].list:
@@ -325,7 +323,7 @@ class ConfigListScreen:
 
 	def closeMenuList(self, recursive = False):
 		if self["config"].isChanged():
-			self.HideHelp()
+			self["config"].hideHelp()
 			self.session.openWithCallback(self.cancelConfirm, MessageBox, _("Really close without saving settings?"), default = False)
 		else:
 			self.close(recursive)
