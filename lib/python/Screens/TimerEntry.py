@@ -275,8 +275,6 @@ class TimerEntry(Screen, ConfigListScreen):
 		cur = self["config"].getCurrent()
 		if cur in (self.channelEntry, self.tagsSet):
 			self.keySelect()
-		elif cur in (self.entryName, self.entryDescription):
-			self.renameEntry()
 		else:
 			ConfigListScreen.keyLeft(self)
 			self.newConfig()
@@ -285,8 +283,6 @@ class TimerEntry(Screen, ConfigListScreen):
 		cur = self["config"].getCurrent()
 		if cur in (self.channelEntry, self.tagsSet):
 			self.keySelect()
-		elif cur in (self.entryName, self.entryDescription):
-			self.renameEntry()
 		else:
 			ConfigListScreen.keyRight(self)
 			self.newConfig()
