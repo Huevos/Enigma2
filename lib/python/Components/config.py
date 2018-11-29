@@ -34,28 +34,30 @@ class ConfigElement(object):
 		self.save_forced = False
 		self.last_value = None
 		self.save_disabled = False
-		self.__notifiers = None
-		self.__notifiers_final = None
+		self.__notifiers = []
+		self.__notifiers_final = []
 		self.enabled = True
 		self.callNotifiersOnSaveAndCancel = False  # this flag only affects notifiers set with "immediate_feedback = False". If set to false the notifier will never run on save/exit by default.
 
 	def getNotifiers(self):
-		if self.__notifiers is None:
-			self.__notifiers = []
 		return self.__notifiers
 
 	def setNotifiers(self, val):
-		self.__notifiers = val
+		if isinstance(val, list):
+			self.__notifiers = val
+		else:
+			self.__notifiers = list(val)
 
 	notifiers = property(getNotifiers, setNotifiers)
 
 	def getNotifiersFinal(self):
-		if self.__notifiers_final is None:
-			self.__notifiers_final = []
 		return self.__notifiers_final
 
 	def setNotifiersFinal(self, val):
-		self.__notifiers_final = val
+		if isinstance(val, list):
+			self.__notifiers_final = val
+		else:
+			self.__notifiers_final = list(val)
 
 	notifiers_final = property(getNotifiersFinal, setNotifiersFinal)
 
@@ -152,8 +154,8 @@ class ConfigElement(object):
 			del self.extra_args[id(notifier)]
 
 	def clearNotifiers(self):
-		self.__notifiers = None
-		self.__notifiers_final = None
+		self.__notifiers = []
+		self.__notifiers_final = []
 		self.extra_args = {}
 
 	def disableSave(self):
