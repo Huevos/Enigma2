@@ -125,7 +125,7 @@ class ConfigElement(object):
 		assert callable(notifier), "[Config] Error: All notifiers must be callable!"
 		if not extra_args:
 			extra_args = []
-		self.extra_args[id(notifier)] = extra_args
+		self.extra_args[id(notifier)] = extra_args  # NOTE: Only one extra_args can be stored per notifier instance.
 		if immediate_feedback:
 			self.notifiers.append(notifier)
 		else:
