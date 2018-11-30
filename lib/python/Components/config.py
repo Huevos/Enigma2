@@ -43,10 +43,7 @@ class ConfigElement(object):
 		return self.__notifiers
 
 	def setNotifiers(self, val):
-		if isinstance(val, list):
-			self.__notifiers = val
-		else:
-			self.__notifiers = list(val)
+		self.__notifiers = val or []
 
 	notifiers = property(getNotifiers, setNotifiers)
 
@@ -54,10 +51,7 @@ class ConfigElement(object):
 		return self.__notifiers_final
 
 	def setNotifiersFinal(self, val):
-		if isinstance(val, list):
-			self.__notifiers_final = val
-		else:
-			self.__notifiers_final = list(val)
+		self.__notifiers_final = val or []
 
 	notifiers_final = property(getNotifiersFinal, setNotifiersFinal)
 
