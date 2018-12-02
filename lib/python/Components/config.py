@@ -119,9 +119,14 @@ class ConfigElement(object):
 
 	def addNotifier(self, notifier, initial_call=True, immediate_feedback=True, extra_args=None):
 		assert callable(notifier), "[Config] Error: All notifiers must be callable!"
-		if not extra_args:
+		if extra_args:
+			print "[Config] =========================================================================="
+			print "[Config] WARNING: The "extra_args" argument is deprecated and will be removed soon!"
+			print "[Config]          Please switch to using a boundFunction() on the notifier instead."
+			print "[Config] =========================================================================="
+		else:
 			extra_args = []
-		self.extra_args[id(notifier)] = extra_args  # NOTE: Only one extra_args can be stored per notifier instance.
+		self.extra_args[id(notifier)] = extra_args
 		if immediate_feedback:
 			self.notifiers.append(notifier)
 		else:
