@@ -121,7 +121,7 @@ class ConfigElement(object):
 		assert callable(notifier), "[Config] Error: All notifiers must be callable!"
 		if extra_args:
 			print "[Config] =========================================================================="
-			print "[Config] WARNING: The "extra_args" argument is deprecated and will be removed soon!"
+			print "[Config] WARNING: The 'extra_args' argument is deprecated and will be removed soon!"
 			print "[Config]          Please switch to using a boundFunction() on the notifier instead."
 			print "[Config] =========================================================================="
 		else:
