@@ -482,27 +482,39 @@ def InitAVSwitch():
 	if SystemInfo["havecolorspace"]:
 		def setHDMIColorspace(configElement):
 			try:
-				f = open("/proc/stb/video/hdmi_colorspace", "w")
+				f = open(SystemInfo["havecolorspace"], "w")
 				f.write(configElement.value)
 				f.close()
 			except:
 				pass
-		if getBrandOEM() == "vuplus" and "4k" in getBoxType():
-			config.av.hdmicolorspace = ConfigSelection(choices={
-					"Edid(Auto)": _("Auto"),
-					"Hdmi_Rgb": _("RGB"),
-					"444": _("YCbCr444"),
-					"422": _("YCbCr422"),
-					"420": _("YCbCr420")},
-					default = "Edid(Auto)")
-		else:
-			config.av.hdmicolorspace = ConfigSelection(choices={
-					"auto": _("auto"),
-					"rgb": _("rgb"),
-					"420": _("420"),
-					"422": _("422"),
-					"444": _("444")},
-					default = "auto")
+				
+		choices = [("auto", _("auto")),
+					("rgb", _("rgb")),
+					("420", _("420")),
+					("422", _("422")),
+					("444", _("444"))]
+		default = "auto"
+
+		if getBoxType() in ('vuzero4k','vusolo4k','vuuno4k','vuuno4kse','vuultimo4k'):
+			choices = [("Edid(Auto)", _("Auto")),
+						("Hdmi_Rgb", _("RGB")),
+						("444", _("YCbCr444")),
+						("422", _("YCbCr422")),
+						("420", _("YCbCr420"))]
+			default = "Edid(Auto)"
+		elif SystemInfo["havecolorspacechoices"]:
+			f = open(SystemInfo["havecolorspacechoices"], "r")
+			colorspacechoices = f.read().strip()
+			f.close()
+			if colorspacechoices:
+				colorspacechoiceslist = colorspacechoices.split(" ")
+				choices = [(colorspace, _("%s") % "Auto" if "AUTO" in colorspace.upper() else colorspace.upper()) for colorspace in colorspacechoiceslist]
+				default = colorspacechoiceslist[0]
+				for colorspace in colorspacechoiceslist:
+					if "AUTO" in colorspace.upper():
+						default = colorspace
+						break
+		config.av.hdmicolorspace = ConfigSelection(choices=choices, default=default)
 		config.av.hdmicolorspace.addNotifier(setHDMIColorspace)
 	else:
 		config.av.hdmicolorspace = ConfigNothing()
