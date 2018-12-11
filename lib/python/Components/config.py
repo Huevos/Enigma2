@@ -153,7 +153,6 @@ class ConfigElement(object):
 	def clearNotifiers(self):
 		self.__notifiers = []
 		self.__notifiers_final = []
-		self.extra_args = {}
 
 	def disableSave(self):
 		self.save_disabled = True
