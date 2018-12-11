@@ -104,7 +104,7 @@ class ConfigElement(object):
 	def changed(self):
 		if self.__notifiers:
 			for x in self.notifiers:
-				if self.extra_args[id(x)]:
+				if id(x) in self.extra_args:
 					x(self, self.extra_args[id(x)])
 				else:
 					x(self)
@@ -112,16 +112,15 @@ class ConfigElement(object):
 	def changedFinal(self):
 		if self.__notifiers_final:
 			for x in self.notifiers_final:
-				if self.extra_args[id(x)]:
+				if id(x) in self.extra_args:
 					x(self, self.extra_args[id(x)])
 				else:
 					x(self)
 
 	def addNotifier(self, notifier, initial_call=True, immediate_feedback=True, extra_args=None):
 		assert callable(notifier), "[Config] Error: All notifiers must be callable!"
-		if not extra_args:
-			extra_args = []
-		self.extra_args[id(notifier)] = extra_args  # NOTE: Only one extra_args can be stored per notifier instance.
+		if extra_args:
+			self.extra_args[id(notifier)] = extra_args
 		if immediate_feedback:
 			self.notifiers.append(notifier)
 		else:
@@ -144,13 +143,12 @@ class ConfigElement(object):
 			self.notifiers.remove(notifier)
 		if notifier in self.notifiers_final:
 			self.notifiers_final.remove(notifier)
-		if self.extra_args[id(notifier)]:
+		if id(notifier) in self.extra_args:
 			del self.extra_args[id(notifier)]
 
 	def clearNotifiers(self):
 		self.__notifiers = []
 		self.__notifiers_final = []
-		self.extra_args = {}
 
 	def disableSave(self):
 		self.save_disabled = True
