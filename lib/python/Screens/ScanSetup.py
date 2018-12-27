@@ -757,7 +757,7 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
 					self.t2mi_plp_id_boolEntry = getConfigListEntry(_('T2MI PLP'), self.scan_sat.t2mi_plp_id_bool)
 					self.list.append(self.t2mi_plp_id_boolEntry)
 					if self.scan_sat.t2mi_plp_id_bool.value:
-						self.list.append(getConfigListEntry(_('T2MI PLP ID'), self.scan_sat.t2mi_plp_id))
+						self.list.append(getConfigListEntry(indent + _('T2MI PLP ID'), self.scan_sat.t2mi_plp_id))
 			elif self.scan_type.value == "predefined_transponder" and self.satList[index_to_scan]:
 				self.updateSatList()
 				self.preDefSatList = getConfigListEntry(_('Satellite'), self.scan_satselection[index_to_scan])

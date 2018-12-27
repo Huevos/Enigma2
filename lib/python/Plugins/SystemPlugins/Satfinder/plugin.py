@@ -201,7 +201,7 @@ class Satfinder(ScanSetup, ServiceScan):
 					self.t2mi_plp_id_boolEntry = getConfigListEntry(_('T2MI PLP'), self.scan_sat.t2mi_plp_id_bool)
 					self.list.append(self.t2mi_plp_id_boolEntry)
 					if self.scan_sat.t2mi_plp_id_bool.value:
-						self.list.append(getConfigListEntry(_('T2MI PLP ID'), self.scan_sat.t2mi_plp_id))
+						self.list.append(getConfigListEntry(indent + _('T2MI PLP ID'), self.scan_sat.t2mi_plp_id))
 			elif self.tuning_type.value == "predefined_transponder":
 				self.updatePreDefTransponders()
 				self.preDefTransponderEntry = getConfigListEntry(_("Transponder"), self.preDefTransponders)
