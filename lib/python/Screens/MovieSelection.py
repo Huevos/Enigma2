@@ -1444,6 +1444,8 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 			if config.movielist.settings_per_directory.value:
 				self.saveLocalSettings()
 			else:
+				config.movielist.moviesort.value = newType
+				config.movielist.moviesort.save()
 				self["list"].temp_sort = newType
 			self.setSortType(newType)
 # Unset specific trash-sorting if other sort chosen while in Trash
@@ -1836,7 +1838,7 @@ class MovieSelection(Screen, HelpableScreen, SelectionEventInfo, InfoBarBase, Pr
 	def do_createdir(self):
 		dirname = ""
 		item = self.getCurrentSelection()
-		if item is not None and not isFolder(item):
+		if item is not None and item[0] and item[1] and not isFolder(item):
 			info = item[1]
 			dirname = info.getName(item[0])
 			full_name = os.path.split(item[0].getPath())[1]

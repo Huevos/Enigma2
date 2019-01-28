@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ViX\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-22 07:14+0000\n"
-"PO-Revision-Date: 2018-12-22 10:18+0100\n"
+"POT-Creation-Date: 2019-01-26 07:34+0000\n"
+"PO-Revision-Date: 2019-01-26 08:51+0100\n"
 "Last-Translator: Rob van der Does <RobvanderDoes@Gmail.com>\n"
 "Language-Team: Andy Blackburn, Rob van der Does\n"
 "Language: nl\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: iso-8859-15\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.2.1\n"
 
 msgid ""
 "\n"
@@ -916,6 +916,10 @@ msgid "%s %s software because updates are available."
 msgstr "%s %s software want er zijn updates beschikbaar."
 
 #, python-format
+msgid "%s ( %s Cards )"
+msgstr "%s ( %s kaarten )"
+
+#, python-format
 msgid "%s (%s)\n"
 msgstr "%s (%s)\n"
 
@@ -1222,6 +1226,9 @@ msgstr "Op de achtergrond wordt een controle uitgevoerd. Wacht een paar minuten 
 
 msgid "A background update check is in progress, please wait a few minutes and try again."
 msgstr "Op de achtergrond wordt een controle uitgevoerd. Wacht een paar minuten en probeer het opnieuw."
+
+msgid "A client is streaming from this box!"
+msgstr "Een klant streamt vanaf deze STB!"
 
 #, python-format
 msgid ""
@@ -2357,6 +2364,9 @@ msgstr "C-Band"
 msgid "CAID"
 msgstr "CAID"
 
+msgid "CAID:SrvID"
+msgstr "CAID:SrvID"
+
 msgid "CCcam Client Info"
 msgstr "CCcam klantinfo"
 
@@ -2827,6 +2837,10 @@ msgstr "Wis log"
 msgid "Clear playlist"
 msgstr "Afspeellijst leegmaken"
 
+#, python-format
+msgid "Client Info ( Oscam-Version: %s )"
+msgstr "KlantInfo ( Oscam-Versie: %s )"
+
 msgid "Client mode"
 msgstr "Client-modus"
 
@@ -3168,9 +3182,6 @@ msgstr "Stel de mate van transparantie in van de zwarte achtergrond van grafisch
 
 msgid "Configure the tuner mode."
 msgstr "Configureer de tunermodus."
-
-msgid "Configure the type of status indication icons shown in the movie list."
-msgstr "Geef aan welk type icoon moet worden gebruikt in de opnamelijst."
 
 msgid "Configure the vertical position of the subtitles, measured from the bottom of the screen."
 msgstr "Stel de verticale positie in van de ondertitels, gemeten vanaf de onderzijde van het scherm."
@@ -4072,6 +4083,10 @@ msgstr "Wilt u de timer voor \"%s\" verwijderen?"
 #, python-format
 msgid "Do you really want to remove your bookmark of %s?"
 msgstr "Weet u zeker dat u het markeerpunt van %s wilt verwijderen?"
+
+#, python-format
+msgid "Do you really want to stop the current recording and delete timer %s?"
+msgstr "Wilt u de huidige opname stoppen en de timer voor %s verwijderen?"
 
 msgid "Do you want to add any additional information ?"
 msgstr "Wilt u informatie toevoegen?"
@@ -5039,12 +5054,6 @@ msgstr "Nadat u op OK drukt worden de volgende taken uitgevoerd!"
 msgid "Font size"
 msgstr "Lettergrootte"
 
-msgid "Force LNB Power"
-msgstr "Forceer LNB Power"
-
-msgid "Force ToneBurst"
-msgstr "Forceer Toneburst"
-
 msgid "Force de-interlace"
 msgstr "Forceer de-interlace"
 
@@ -5507,6 +5516,9 @@ msgstr "Honduras"
 msgid "Hong Kong"
 msgstr "Hong Kong"
 
+msgid "Hops"
+msgstr "Hops"
+
 msgid "Hops:"
 msgstr "Hops:"
 
@@ -5605,9 +5617,6 @@ msgstr ""
 "Als u een \"unconfirmed\" bericht krijgt:\n"
 "- Is er geen geldig IP-adres gevonden.\n"
 "- Controleer uw DHCP server, bekabeling en adapter instellingen."
-
-msgid "IP-Address"
-msgstr "IP-adres"
 
 #
 msgid "IP:"
@@ -6888,12 +6897,8 @@ msgstr "Multi-EPG"
 msgid "Multiboot"
 msgstr "Multiboot"
 
-msgid "Multiboot ERROR! - no STARTUP in /boot -Please check /etc/fstab for correct boot partition"
-msgstr "Multiboot FOUT! - geen STARTUP in /boot - Check /etc/fstab op correct bootpartitie."
-
-#, python-format
-msgid "Multiboot ERROR! - no STARTUP_%s in /boot - Image may need manual restart"
-msgstr "Multiboot FOUT! - geen STARTUP_%s in /boot - Box moet mogelijk handmatig opnieuw gestart worden."
+msgid "Multiboot ERROR! - no STARTUP in boot partition."
+msgstr "Multiboot FOUT! - geen STARTUP in bootpartitie."
 
 msgid "Multiboot Image Restart"
 msgstr "Multibootimage herstarten"
@@ -7179,15 +7184,6 @@ msgstr "Geen vrije index beschikbaar"
 
 msgid "No free tuner!"
 msgstr "Geen vrije tuner!"
-
-msgid "No httpport defined in oscam.conf. This value is required!"
-msgstr "Geen httpport vastgelegd in oscam.conf: die is vereist!"
-
-msgid "No httppwd defined in oscam.conf"
-msgstr "Geen httppwd vastgelegd in oscam.conf"
-
-msgid "No httpuser defined in oscam.conf"
-msgstr "Geen httpuser vastgelegd in oscam.conf"
 
 msgid "No module found"
 msgstr "Geen module gevonden"
@@ -7555,14 +7551,15 @@ msgstr "Gewoon"
 msgid "Original"
 msgstr "Origineel"
 
-msgid "Oscam ECM-info"
-msgstr "Oscam ECM-info"
-
 msgid "Oscam Info - Configuration"
 msgstr "Oscam info - configuratie"
 
 msgid "Oscam Info - Main Menu"
 msgstr "Oscam info - hoofd Menu"
+
+#, python-format
+msgid "Oscam Log ( Oscam-Version: %s )"
+msgstr "Oscam log ( Oscam-Versie: %s )"
 
 msgid "Other"
 msgstr "Anders"
@@ -7599,6 +7596,9 @@ msgstr "PDC"
 
 msgid "PGS file"
 msgstr "PGS-bestand"
+
+msgid "PID"
+msgstr "PID"
 
 #
 msgid "PIP"
@@ -7868,7 +7868,7 @@ msgstr "Gelieve titels aan de compilatie toe te voegen."
 msgid "Please change the recording end time"
 msgstr "Wijzig de eindtijd van de opname"
 
-msgid "Please choose CCcam reader"
+msgid "Please choose CCcam-Reader"
 msgstr "Kies de CCcam-lezer"
 
 msgid "Please choose an extension..."
@@ -8534,7 +8534,7 @@ msgstr "Waardering niet bepaald"
 msgid "Re-enter PIN"
 msgstr "Voer PIN nogmaals in"
 
-msgid "Read user data from oscam.conf"
+msgid "Read Userdata from oscam.conf"
 msgstr "Lees gebruikersgegevens van oscam.conf"
 
 msgid "Reader"
@@ -8876,6 +8876,9 @@ msgstr "Standaard videoverbetering instellingen gebruiken?"
 
 msgid "Reset video enhancement settings to your last configuration?"
 msgstr "Laatste videoverbeterings configuratie gebruiken?"
+
+msgid "Reshare"
+msgstr "Reshare:"
 
 msgid "Reshare:"
 msgstr "Reshare:"
@@ -9612,6 +9615,10 @@ msgstr "Serienummer"
 msgid "Serv.Name"
 msgstr "Serv.Naam"
 
+#, python-format
+msgid "Server Info ( Oscam-Version: %s )"
+msgstr "Serverinfo ( Oscam-Versie: %s )"
+
 msgid "Server:"
 msgstr "Server:"
 
@@ -10117,7 +10124,7 @@ msgstr "Toon menunummers"
 msgid "Show message when recording starts"
 msgstr "Toon bericht wanneer opname begint"
 
-msgid "Show movie lengths in movielist"
+msgid "Show movie lengths in movie list"
 msgstr "Toon opnamelengte in opnamelijst"
 
 msgid "Show movies"
@@ -10987,6 +10994,9 @@ msgstr "Systeemtemperatuur: %s"
 msgid "System: "
 msgstr "Systeem: "
 
+msgid "T2MI RAW Mode"
+msgstr "T2MI RAW modus"
+
 msgid "TB"
 msgstr "TB"
 
@@ -11318,9 +11328,6 @@ msgstr "Er zijn momenteel geen updates beschikbaar."
 
 msgid "There has been an error, please try again later. If this issue persists, please check openvix.co.uk or world-of-satellite.com"
 msgstr "Er is een fout opgetreden. Als het probleem aanhoudt, controleer dan op openvix.co.uk of op world-of-satellite.com wat er aan de hand is."
-
-msgid "There is no [webif] section in oscam.conf"
-msgstr "Er is geen[webif] sectie in oscam.conf"
 
 msgid "There is no signal to lock on !"
 msgstr "Er is geen signaal om een lock te verkrijgen!"
@@ -11670,9 +11677,6 @@ msgstr "Timeshift lokatie"
 
 msgid "Timeshift not possible!"
 msgstr "Timeshift is niet mogelijk!"
-
-msgid "Timeshift on a stream is not supported!"
-msgstr "Timeshift van een stream wordt niet ondersteund!"
 
 msgid "Timeshift save failed!"
 msgstr "Opslaan timeshift mislukt!"
@@ -12689,12 +12693,6 @@ msgstr "Wat wilt u zoeken?"
 msgid "When enabled enigma2 will load unlinked userbouquets. This means that userbouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are upgraded"
 msgstr "Indien ingeschakeld zal enigma2 niet geregistreerde favorietenlijsten laden. Dat betekent dat de lijsten die beschikbaar zijn maar niet zijn opgenomen in de radio- en TV-lijsten, toch geladen zullen worden. Dit stelt u b.v. in staat om eigen lijsten te bewaren, terwijl settings worden geüpgradet."
 
-msgid "When enabled the LNB power will not be switched off in standby"
-msgstr "Indien ingeschakeld zal de spanning van de LNB in stand-by niet worden uitgeschakeld."
-
-msgid "When enabled the LNB toneburst will be forced"
-msgstr "Indien ingeschakeld zal de LNB-toneburst worden geforceerd."
-
 msgid "When enabled the online checker will also check for experimental versions"
 msgstr "Indien geactiveerd zal ook worden gecontroleerd op experimentele versies."
 
@@ -12891,6 +12889,9 @@ msgstr "Draadloze netwerkinstellingen."
 
 msgid "Wireless network state"
 msgstr "Status draadloos netwerk"
+
+msgid "With T2MI RAW mode disabled (default) we can use single T2MI PLP de-encapsulation. With T2MI RAW mode enabled we can use astra-sm to analyze T2MI"
+msgstr "Indien T2MI RAW modus gedeactiveerd is (default), kunnen we de enkele T2MI PLP de-encapsulation gebruiken. Indien T2MI RAW modus geactiveerd is, kunnen we astra-sm gebruiken om T2MI te analyseren."
 
 msgid "With popup"
 msgstr "Met pop-up"
@@ -14032,6 +14033,12 @@ msgstr "muziek/ballet/dans (algemeen)"
 msgid "musical/opera"
 msgstr "musical/opera"
 
+msgid "n/A"
+msgstr "NVT"
+
+msgid "n/a"
+msgstr "NVT"
+
 msgid "nature/animals/environment"
 msgstr "natuur/dieren/milieu"
 
@@ -14141,15 +14148,8 @@ msgstr "origineel"
 msgid "original language"
 msgstr "originele taal"
 
-msgid "oscam.conf could not be found"
-msgstr "bestand oscam.conf niet gevonden"
-
-msgid ""
-"oscam.conf not found.\n"
-"Please enter username/password manually."
-msgstr ""
-"Bestand oscam.conf niet gevonden.\n"
-"Geef gebruikersnaam/wachtwoord handmatig in."
+msgid "oscam webif disabled"
+msgstr "Oscam web-if gedeactiveerd"
 
 msgid "packages selected."
 msgstr "pakketten geselecteerd."
@@ -15078,6 +15078,9 @@ msgstr "zapte"
 #~ msgid "Configure the refresh rate of the screen."
 #~ msgstr "Bepaal de verversingsfrequentie van het scherm."
 
+#~ msgid "Configure the type of status indication icons shown in the movie list."
+#~ msgstr "Geef aan welk type icoon moet worden gebruikt in de opnamelijst."
+
 #~ msgid "Configure which tuner will be preferred for recordings, when more than one tuner is available. 'Disabled' would select a tuner based on preferred tuner in customise screen. 'Auto' would choose based on E2's default rules, ignoring preferred tuner in customise screen."
 #~ msgstr "Stel in welke tuner de voorkeur heeft voor opnames als meerdere tuners beschikbaar zijn. \"Uitgeschakeld\" betekent dat de tunerkeuze wordt bepaald door de instelling \"Voorkeurstuner\" in het scherm \"Aanpassen\". \"Auto\" betekent dat de keuze wordt gebaseerd op de standaard regels van Enigma, waarbij de instelling \"Voorkeurstuner\" in het scherm \"Aanpassen\" wordt genegeerd. "
 
@@ -15398,6 +15401,12 @@ msgstr "zapte"
 #~ msgid "Flashing failed"
 #~ msgstr "Flashen mislukt"
 
+#~ msgid "Force LNB Power"
+#~ msgstr "Forceer LNB Power"
+
+#~ msgid "Force ToneBurst"
+#~ msgstr "Forceer Toneburst"
+
 #~ msgid "Free Memory:"
 #~ msgstr "Vrij:"
 
@@ -15437,6 +15446,9 @@ msgstr "zapte"
 
 #~ msgid "Hotkey"
 #~ msgstr "Hotkey"
+
+#~ msgid "IP-Address"
+#~ msgstr "IP-adres"
 
 #~ msgid "Image Information"
 #~ msgstr "Informatie over de firmware"
@@ -15523,6 +15535,9 @@ msgstr "zapte"
 #~ msgid "MultiEPG settings"
 #~ msgstr "Multi-EPG instellingen"
 
+#~ msgid "Multiboot ERROR! - no STARTUP in /boot -Please check /etc/fstab for correct boot partition"
+#~ msgstr "Multiboot FOUT! - geen STARTUP in /boot - Check /etc/fstab op correcte bootpartitie."
+
 #~ msgid "Multiplex"
 #~ msgstr "Multiplex"
 
@@ -15555,6 +15570,15 @@ msgstr "zapte"
 
 #~ msgid "No free tuner available!"
 #~ msgstr "Geen vrije tuner beschikbaar."
+
+#~ msgid "No httpport defined in oscam.conf. This value is required!"
+#~ msgstr "Geen httpport vastgelegd in oscam.conf: die is vereist!"
+
+#~ msgid "No httppwd defined in oscam.conf"
+#~ msgstr "Geen httppwd vastgelegd in oscam.conf"
+
+#~ msgid "No httpuser defined in oscam.conf"
+#~ msgstr "Geen httpuser vastgelegd in oscam.conf"
 
 #~ msgid "No stream clients"
 #~ msgstr "Geen stream-klanten"
@@ -15608,8 +15632,8 @@ msgstr "zapte"
 #~ msgid "Options..."
 #~ msgstr "Opties..."
 
-#~ msgid "PIDs"
-#~ msgstr "PIDs"
+#~ msgid "Oscam ECM-info"
+#~ msgstr "Oscam ECM-info"
 
 #~ msgid "Parental control editor"
 #~ msgstr "Kinderslot aanpassen"
@@ -15937,6 +15961,9 @@ msgstr "zapte"
 #~ msgid "The wizard found a configuration backup. Do you want to restore your old settings from %s?"
 #~ msgstr "De wizard vond een configuratiebackup. Wilt u uw oude instellingen van %s herstellen?"
 
+#~ msgid "There is no [webif] section in oscam.conf"
+#~ msgstr "Er is geen[webif] sectie in oscam.conf"
+
 #~ msgid "This can be either the IP or name of the fallback receiver, not including the scheme or port number (e.g. either 'xxx.xxx.xxx.xxx' or 'name_second_box')."
 #~ msgstr "Dit kan het IP-adres of de naam van de remote ontvanger zijn (dus of 'xxx.xxx.xxx.xxx' of 'naam-van-de-box')."
 
@@ -15959,6 +15986,9 @@ msgstr "zapte"
 
 #~ msgid "Timer overview"
 #~ msgstr "Timer overzicht"
+
+#~ msgid "Timeshift on a stream is not supported!"
+#~ msgstr "Timeshift van een stream wordt niet ondersteund!"
 
 #~ msgid "Timeshift settings"
 #~ msgstr "Timeshift instellingen"
@@ -16043,6 +16073,12 @@ msgstr "zapte"
 #~ msgid "Videosize"
 #~ msgstr "Video-afmetingen"
 
+#~ msgid "When enabled the LNB power will not be switched off in standby"
+#~ msgstr "Indien ingeschakeld zal de spanning van de LNB in stand-by niet worden uitgeschakeld."
+
+#~ msgid "When enabled the LNB toneburst will be forced"
+#~ msgstr "Indien ingeschakeld zal de LNB-toneburst worden geforceerd."
+
 #~ msgid "When enabled, Enigma2 will load unlinked bouquets. This means that bouquets that are available, but not included in the bouquets.tv or bouquets.radio files, will still be loaded. This allows you for example to keep your own user bouquet while installed settings are upgraded"
 #~ msgstr "Indien ingeschakeld zal enigma2 niet geregistreerde favorietenlijsten laden. Dat betekent dat de lijsten die beschikbaar zijn maar niet zijn opgenomen in de radio- en TV-lijsten toch geladen zullen worden. Dit stelt u b.v. in staat om eigen lijsten te bewaren, terwijl settings worden geupgrade."
 
@@ -16096,6 +16132,16 @@ msgstr "zapte"
 
 #~ msgid "only 4K"
 #~ msgstr "alleen 4K"
+
+#~ msgid "oscam.conf could not be found"
+#~ msgstr "bestand oscam.conf niet gevonden"
+
+#~ msgid ""
+#~ "oscam.conf not found.\n"
+#~ "Please enter username/password manually."
+#~ msgstr ""
+#~ "Bestand oscam.conf niet gevonden.\n"
+#~ "Geef gebruikersnaam/wachtwoord handmatig in."
 
 #~ msgid "reliable"
 #~ msgstr "betrouwbaar"
