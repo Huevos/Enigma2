@@ -30,6 +30,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.PLS_Gold, 
 			eDVBFrontendParametersSatellite.PLS_Default_Gold_Code,
 			eDVBFrontendParametersSatellite.No_T2MI_PLP_Id,
+			eDVBFrontendParametersSatellite.T2MI_Default_Pid,
 			2004,
 			2,
 			"Astra 2 28.2e"),
@@ -50,6 +51,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.PLS_Gold, 
 			eDVBFrontendParametersSatellite.PLS_Default_Gold_Code,
 			eDVBFrontendParametersSatellite.No_T2MI_PLP_Id,
+			eDVBFrontendParametersSatellite.T2MI_Default_Pid,
 			3224,
 			3,
 			"Astra 3 23.5e"),
@@ -70,6 +72,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.PLS_Gold, 
 			eDVBFrontendParametersSatellite.PLS_Default_Gold_Code,
 			eDVBFrontendParametersSatellite.No_T2MI_PLP_Id,
+			eDVBFrontendParametersSatellite.T2MI_Default_Pid,
 			1079,
 			1,
 			"Astra 1 19.2e"),
@@ -90,6 +93,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.PLS_Gold, 
 			eDVBFrontendParametersSatellite.PLS_Default_Gold_Code,
 			eDVBFrontendParametersSatellite.No_T2MI_PLP_Id,
+			eDVBFrontendParametersSatellite.T2MI_Default_Pid,
 			12400,
 			318,
 			"Hotbird 13.0e"),
@@ -110,6 +114,7 @@ class AutoDiseqc(Screen, ConfigListScreen):
 			eDVBFrontendParametersSatellite.PLS_Gold, 
 			eDVBFrontendParametersSatellite.PLS_Default_Gold_Code,
 			eDVBFrontendParametersSatellite.No_T2MI_PLP_Id,
+			eDVBFrontendParametersSatellite.T2MI_Default_Pid,
 			706,
 			1536,
 			"Thor 5/6/7 0.8w"),
@@ -129,9 +134,10 @@ class AutoDiseqc(Screen, ConfigListScreen):
 	SAT_TABLE_PLS_MODE = 11
 	SAT_TABLE_PLS_CODE = 12
 	SAT_TABLE_T2MI_PLP_ID = 13
-	SAT_TABLE_TSID = 14
-	SAT_TABLE_ONID = 15
-	SAT_TABLE_NAME = 16
+	SAT_TABLE_T2MI_PID = 14
+	SAT_TABLE_TSID = 15
+	SAT_TABLE_ONID = 16
+	SAT_TABLE_NAME = 17
 
 	def __init__(self, session, feid, nr_of_ports, simple_tone, simple_sat_change):
 		Screen.__init__(self, session)
