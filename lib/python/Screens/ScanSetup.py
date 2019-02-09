@@ -755,11 +755,15 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
 						self.scan_sat.is_id.value = eDVBFrontendParametersSatellite.No_Stream_Id_Filter
 						self.scan_sat.pls_mode.value = eDVBFrontendParametersSatellite.PLS_Gold
 						self.scan_sat.pls_code.value = eDVBFrontendParametersSatellite.PLS_Default_Gold_Code
-					self.t2mi_plp_id_boolEntry = getConfigListEntry(_('T2MI PLP'), self.scan_sat.t2mi_plp_id_bool)
-					self.list.append(self.t2mi_plp_id_boolEntry)
-					if self.scan_sat.t2mi_plp_id_bool.value:
-						self.list.append(getConfigListEntry(indent + _('T2MI PLP ID'), self.scan_sat.t2mi_plp_id))
-						self.list.append(getConfigListEntry(indent + _('T2MI PID'), self.scan_sat.t2mi_pid))
+					if "has_t2mi_in_drivers" in SystemInfo and SystemInfo["has_t2mi_in_drivers"]:
+						self.t2mi_plp_id_boolEntry = getConfigListEntry(_('T2MI PLP'), self.scan_sat.t2mi_plp_id_bool)
+						self.list.append(self.t2mi_plp_id_boolEntry)
+						if self.scan_sat.t2mi_plp_id_bool.value:
+							self.list.append(getConfigListEntry(indent + _('T2MI PLP ID'), self.scan_sat.t2mi_plp_id))
+							self.list.append(getConfigListEntry(indent + _('T2MI PID'), self.scan_sat.t2mi_pid))
+					else:
+						self.scan_sat.t2mi_plp_id.value = eDVBFrontendParametersSatellite.No_T2MI_PLP_Id
+						self.scan_sat.t2mi_pid.value = eDVBFrontendParametersSatellite.T2MI_Default_Pid
 			elif self.scan_type.value == "predefined_transponder" and self.satList[index_to_scan]:
 				self.updateSatList()
 				self.preDefSatList = getConfigListEntry(_('Satellite'), self.scan_satselection[index_to_scan])
@@ -902,9 +906,10 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
 		elif cur == self.t2mi_plp_id_boolEntry:
 			if self.t2mi_plp_id_boolEntry[1].value:
 				self.scan_sat.t2mi_plp_id.value = 0 if self.t2mi_plp_id_memory < 0 else self.t2mi_plp_id_memory
-				self.scan_sat.t2mi_pid.value = eDVBFrontendParametersSatellite.T2MI_Default_Pid if self.t2mi_plp_id_memory < 0 else self.scan_sat.t2mi_pid.value
+				self.scan_sat.t2mi_pid.value = self.t2mi_pid_memory
 			else:
 				self.t2mi_plp_id_memory = self.scan_sat.t2mi_plp_id.value
+				self.t2mi_pid_memory = self.scan_sat.t2mi_pid.value
 				self.scan_sat.t2mi_plp_id.value = eDVBFrontendParametersSatellite.No_T2MI_PLP_Id
 				self.scan_sat_t2mi_pid.value = eDVBFrontendParametersSatellite.T2MI_Default_Pid
 			self.createSetup()
@@ -1109,13 +1114,14 @@ class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, Terrest
 			(eDVBFrontendParametersSatellite.PLS_Combo, _("Combo"))])
 		self.scan_sat.pls_code = ConfigInteger(default = defaultSat["pls_code"], limits = (0, 262142))
 		self.scan_sat.t2mi_plp_id = ConfigInteger(default = defaultSat["t2mi_plp_id"], limits = (eDVBFrontendParametersSatellite.No_T2MI_PLP_Id, 255))
-		self.scan_sat.t2mi_pid = ConfigInteger(default = defaultSat["t2mi_pid"], limits = (0, 8191))
+		self.scan_sat.t2mi_pid = ConfigInteger(default = defaultSat["t2mi_pid"] if self.scan_sat.t2mi_plp_id.value != eDVBFrontendParametersSatellite.No_T2MI_PLP_Id else eDVBFrontendParametersSatellite.No_T2MI_PLP_Id, limits = (0, 8191))
 		self.scan_sat.t2mi_plp_id_bool  = ConfigSelection(default = defaultSat["t2mi_plp_id"] != eDVBFrontendParametersSatellite.No_T2MI_PLP_Id, choices = [(True, _("Enabled")),(False, _("Disabled"))])
 		
 		self.is_id_memory = self.scan_sat.is_id.value # used to prevent is_id value being lost when self.scan_sat.is_id_bool state changes
 		self.pls_mode_memory = self.scan_sat.pls_mode.value
 		self.pls_code_memory = self.scan_sat.pls_code.value
 		self.t2mi_plp_id_memory = self.scan_sat.t2mi_plp_id.value
+		self.t2mi_pid_memory = self.scan_sat.t2mi_pid.value
 
 		# cable
 		self.scan_cab.frequency = ConfigInteger(default = defaultCab["frequency"], limits = (50000, 999000))
