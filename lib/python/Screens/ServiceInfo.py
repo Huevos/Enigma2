@@ -5,7 +5,7 @@ from Components.Label import Label
 from Components.config import config
 from Components.Sources.StaticText import StaticText
 from ServiceReference import ServiceReference
-from enigma import eListboxPythonMultiContent, eListbox, gFont, iServiceInformation, eServiceCenter, RT_HALIGN_LEFT
+from enigma import eListboxPythonMultiContent, eListbox, gFont, iServiceInformation, eServiceCenter, RT_HALIGN_LEFT, eDVBFrontendParametersSatellite
 from Tools.Transponder import ConvertToHumanReadable, getChannelNumber
 import skin
 
@@ -303,7 +303,7 @@ class ServiceInfo(Screen):
 						(_("Input Stream ID"), "%s" % (frontendData.get("is_id", -1)), TYPE_TEXT),
 						(_("PLS Mode & PLS Code"), "%s - %s" % (frontendData["pls_mode"], frontendData["pls_code"]), TYPE_TEXT),
 						(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", -1)), TYPE_TEXT)
-						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", 4096)), TYPE_TEXT),
+						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid)), TYPE_TEXT),
 						(_("Inversion, Pilot & Roll-off"), "%s - %s - %s" % (frontendData["inversion"], frontendData.get("pilot", None), str(frontendData.get("rolloff", None))), TYPE_TEXT))
 				else: # not multistream
 					return (tuner,
@@ -312,7 +312,7 @@ class ServiceInfo(Screen):
 						(_("Frequency & Polarization"), "%s - %s" % (frontendData.get("frequency", 0), frontendData["polarization"]), TYPE_TEXT),
 						(_("Symbol rate & FEC"), "%s - %s" % (frontendData.get("symbol_rate", 0), frontendData["fec_inner"]), TYPE_TEXT),
 						(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", -1)), TYPE_TEXT),
-						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", 4096), TYPE_TEXT),
+						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid), TYPE_TEXT),
 						(_("Inversion, Pilot & Roll-off"), "%s - %s - %s" % (frontendData["inversion"], frontendData.get("pilot", None), str(frontendData.get("rolloff", None))), TYPE_TEXT))
 			elif frontendDataOrg["tuner_type"] == "DVB-C":
 				return (tuner,
