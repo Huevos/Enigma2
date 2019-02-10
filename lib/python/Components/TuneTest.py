@@ -33,7 +33,7 @@ class Tuner:
 				parm.t2mi_pid = transponder[14]
 			else:
 				parm.t2mi_plp_id = eDVBFrontendParametersSatellite.No_T2MI_PLP_Id
-				parm.t2mi_pid = eDVBFrontendParametersSatellite::T2MI_Default_Pid
+				parm.t2mi_pid = eDVBFrontendParametersSatellite.T2MI_Default_Pid
 			self.tuneSatObj(parm)
 
 	def tuneSatObj(self, transponderObj):
