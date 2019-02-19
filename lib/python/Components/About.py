@@ -100,7 +100,7 @@ def getCPUSpeedMHzInt():
 	return int(cpu_speed)
 
 def getCPUSpeedString():
-	cpu_speed = getCPUSpeedMHzInt()
+	cpu_speed = float(getCPUSpeedMHzInt())
 	if cpu_speed > 0:
 		if cpu_speed >= 1000:
 			cpu_speed = "%s GHz" % str(round(cpu_speed/1000,1))
