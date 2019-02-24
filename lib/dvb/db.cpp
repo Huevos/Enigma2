@@ -1444,8 +1444,8 @@ PyObject *eDVBDB::readSatellites(ePyObject sat_list, ePyObject sat_dict, ePyObje
 						pls_mode = eDVBFrontendParametersSatellite::PLS_Gold;
 						pls_code = root2gold(pls_code);
 					}
-					tuple = PyTuple_New(16);
- 					PyTuple_SET_ITEM(tuple, 0, PyInt_FromLong(0));
+					tuple = PyTuple_New(17);
+					PyTuple_SET_ITEM(tuple, 0, PyInt_FromLong(0));
 					PyTuple_SET_ITEM(tuple, 1, PyInt_FromLong(freq));
 					PyTuple_SET_ITEM(tuple, 2, PyInt_FromLong(sr));
 					PyTuple_SET_ITEM(tuple, 3, PyInt_FromLong(pol));
