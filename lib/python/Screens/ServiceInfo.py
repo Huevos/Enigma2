@@ -303,7 +303,7 @@ class ServiceInfo(Screen):
 						(_("Input Stream ID"), "%s" % (frontendData.get("is_id", eDVBFrontendParametersSatellite.No_Stream_Id_Filter)), TYPE_TEXT),
 						(_("PLS Mode & PLS Code"), "%s - %s" % (frontendData["pls_mode"], frontendData["pls_code"]), TYPE_TEXT),
 						(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", eDVBFrontendParametersSatellite.No_T2MI_PLP_Id)), TYPE_TEXT),
-						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == eDVBFrontendParametersSatellite.No_T2MI_PLP_Id else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid)), TYPE_TEXT),
+						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", eDVBFrontendParametersSatellite.No_T2MI_PLP_Id) == eDVBFrontendParametersSatellite.No_T2MI_PLP_Id else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid)), TYPE_TEXT),
 						(_("Inversion, Pilot & Roll-off"), "%s - %s - %s" % (frontendData["inversion"], frontendData.get("pilot", None), str(frontendData.get("rolloff", None))), TYPE_TEXT))
 				else: # not multistream
 					return (tuner,
