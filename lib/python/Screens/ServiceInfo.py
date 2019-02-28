@@ -294,7 +294,7 @@ class ServiceInfo(Screen):
 				tuner = (_("NIM & Type"), chr(ord('A') + frontendData["tuner_number"]) + " - " + frontendData["tuner_type"], TYPE_TEXT)
 			if frontendDataOrg["tuner_type"] == "DVB-S":
 				t2mi = lambda x: None if x == -1 else str(x)
-				if frontendData.get("is_id", -1) > -1: # multistream
+				if frontendData.get("is_id", eDVBFrontendParametersSatellite.No_Stream_Id_Filter) > eDVBFrontendParametersSatellite.No_Stream_Id_Filter: # multistream
 					return (tuner,
 						(_("System & Modulation"), "%s %s" % (frontendData["system"], frontendData["modulation"]), TYPE_TEXT),
 						(_("Orbital position"), "%s" % frontendData["orbital_position"], TYPE_TEXT),
