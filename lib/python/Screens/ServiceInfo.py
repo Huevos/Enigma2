@@ -302,7 +302,7 @@ class ServiceInfo(Screen):
 						(_("Symbol rate & FEC"), "%s - %s" % (frontendData.get("symbol_rate", 0), frontendData["fec_inner"]), TYPE_TEXT),
 						(_("Input Stream ID"), "%s" % (frontendData.get("is_id", -1)), TYPE_TEXT),
 						(_("PLS Mode & PLS Code"), "%s - %s" % (frontendData["pls_mode"], frontendData["pls_code"]), TYPE_TEXT),
-						(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", -1)), TYPE_TEXT)
+						(_("T2MI PLP ID"), t2mi(frontendData.get("t2mi_plp_id", -1)), TYPE_TEXT),
 						(_("T2MI PID"), None if frontendData.get("t2mi_plp_id", -1) == -1 else str(frontendData.get("t2mi_pid", eDVBFrontendParametersSatellite.T2MI_Default_Pid)), TYPE_TEXT),
 						(_("Inversion, Pilot & Roll-off"), "%s - %s - %s" % (frontendData["inversion"], frontendData.get("pilot", None), str(frontendData.get("rolloff", None))), TYPE_TEXT))
 				else: # not multistream
