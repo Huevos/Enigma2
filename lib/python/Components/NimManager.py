@@ -1600,14 +1600,8 @@ def InitNimManager(nimmgr, update_slots = []):
 			if slot.isFBCLink():
 				config_mode_choices = {"nothing": _("FBC automatic"), "advanced": _("FBC SCR (Unicable/JESS)")}
 			else:
-				config_mode_choices = {"simple": _("Simple"), "advanced": _("Advanced")}
-				if not slot.multi_type:
-					config_mode_choices["nothing"] = _("Disabled")
-				if len(nimmgr.getNimListOfType(slot.type, exception=slot_id)) > 0:
-					config_mode_choices["equal"] = _("Equal to")
-					config_mode_choices["satposdepends"] = _("Second cable of motorized LNB")
-				if len(nimmgr.canConnectTo(slot_id)) > 0:
-					config_mode_choices["loopthrough"] = _("Loop through from")
+				#Just define all and redefine them in Satconfig.py as here all tuners are not defined yet
+				config_mode_choices = {"nothing": _("Disabled"), "simple": _("Simple"), "advanced": _("Advanced"), "equal": _("Equal to"), "satposdepends": _("Second cable of motorized LNB"), "loopthrough": _("Loop through from")}
 			nim.configMode = ConfigSelection(config_mode_choices, "nothing" if slot.isFBCLink() else "simple")
 			nim.configMode.slot_id = slot_id
 		elif slot.canBeCompatible("DVB-C") or slot.canBeCompatible("DVB-T") or slot.canBeCompatible("ATSC"):

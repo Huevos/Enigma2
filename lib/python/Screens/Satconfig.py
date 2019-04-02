@@ -78,6 +78,21 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 			self.list.append(getConfigListEntry(self.indent % ("   %s [%s]" % (_("Turning step size"), chr(176))), nim.tuningstepsize, _("Consult your motor's spec sheet for this information, or leave the default setting.")))
 			self.list.append(getConfigListEntry(self.indent % ("   %s" % _("Max memory positions")), nim.rotorPositions, _("Consult your motor's spec sheet for this information, or leave the default setting.")))
 
+	def adaptConfigModeChoices(self):
+		if self.nim.isCompatible("DVB-S") and not self.nim.isFBCLink():
+			#redefine configMode choices with only the possible/required options.
+			#We have to pre-define them here as here all tuner configs are known
+			config_mode_choices = {"simple": _("Simple"), "advanced": _("Advanced")}
+			if not self.nim.multi_type:
+				config_mode_choices["nothing"] = _("Disabled")
+			if nimmanager.canEqualTo(self.slotid):
+				config_mode_choices["equal"] = _("Equal to")
+			if nimmanager.canDependOn(self.slotid):
+				config_mode_choices["satposdepends"] = _("Second cable of motorized LNB")
+			if nimmanager.canConnectTo(self.slotid):
+				config_mode_choices["loopthrough"] = _("Loop through from")
+			self.nimConfig.configMode.setChoices(config_mode_choices, "simple")
+
 	def createSetup(self):
 		self.list = [ ]
 
@@ -618,6 +633,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		self.slotid = slotid
 		self.nim = nimmanager.nim_slots[slotid]
 		self.nimConfig = self.nim.config
+		self.adaptConfigModeChoices()
 		self.createSetup()
 		self.setTitle(_("Setup") + " " + self.nim.friendly_full_description)
 		
