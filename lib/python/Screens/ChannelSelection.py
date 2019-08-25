@@ -1409,7 +1409,6 @@ class ChannelSelectionEdit:
 
 		if close:
 			self.cancel()
-			
 
 MODE_TV = 0
 MODE_RADIO = 1
