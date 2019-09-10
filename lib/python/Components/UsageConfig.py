@@ -681,6 +681,7 @@ def InitUsageConfig():
 		config.usage.time.display.value = config.usage.time.display.default
 
 	config.usage.boolean_graphic = ConfigYesNo(default=False)
+	config.usage.selection_graphic = ConfigYesNo(default=True)
 
 	if SystemInfo["hasXcoreVFD"]:
 		def set12to8characterVFD(configElement):
