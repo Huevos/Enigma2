@@ -107,13 +107,17 @@ def resolveFilename(scope, base="", path_prefix=None):
 		from Components.config import config
 		skin = os.path.dirname(config.skin.primary_skin.value)
 		resolveList = [
-			os.path.join(defaultPaths[SCOPE_CONFIG][0], skin),
+			defaultPaths[SCOPE_CONFIG][0],
 			os.path.join(defaultPaths[SCOPE_SKIN][0], skin),
 			os.path.join(defaultPaths[SCOPE_SKIN][0], "skin_fallback_%d" % getDesktop(0).size().height()),
 			os.path.join(defaultPaths[SCOPE_SKIN][0], "skin_default"),
-			defaultPaths[SCOPE_CONFIG][0],  # Deprecated top level of SCOPE_CONFIG directory.
-			defaultPaths[SCOPE_SKIN][0]
+			defaultPaths[SCOPE_SKIN][0]  # Can we deprecate top level of SCOPE_SKIN directory?
 		]
+		if config.misc.extendedResolveList.value:
+			resolveList = [
+				os.path.join(defaultPaths[SCOPE_CONFIG][0], skin),
+				os.path.join(defaultPaths[SCOPE_CONFIG][0], "skin_common")
+			] + resolveList
 		for item in resolveList:
 			file = os.path.join(item, base)
 			if pathExists(file):
@@ -127,13 +131,17 @@ def resolveFilename(scope, base="", path_prefix=None):
 		else:
 			skin = ""
 		resolveList = [
-			os.path.join(defaultPaths[SCOPE_CONFIG][0], "display", skin),
+			defaultPaths[SCOPE_CONFIG][0],
 			os.path.join(defaultPaths[SCOPE_LCDSKIN][0], skin),
 			os.path.join(defaultPaths[SCOPE_LCDSKIN][0], "skin_fallback_%s" % getDesktop(1).size().height()),
 			os.path.join(defaultPaths[SCOPE_LCDSKIN][0], "skin_default"),
-			defaultPaths[SCOPE_CONFIG][0],  # Deprecated top level of SCOPE_CONFIG directory.
-			defaultPaths[SCOPE_LCDSKIN][0]
+			defaultPaths[SCOPE_LCDSKIN][0]  # Can we deprecate top level of SCOPE_LCDSKIN directory?
 		]
+		if config.misc.extendedResolveList.value:
+			resolveList = [
+				os.path.join(defaultPaths[SCOPE_CONFIG][0], "display", skin),
+				os.path.join(defaultPaths[SCOPE_CONFIG][0], "display", "skin_common")
+			] + resolveList
 		for item in resolveList:
 			file = os.path.join(item, base)
 			if pathExists(file):
