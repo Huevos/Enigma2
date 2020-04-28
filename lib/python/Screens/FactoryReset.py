@@ -16,6 +16,7 @@ class FactoryReset(Setup, ProtectedScreen):
 	def __init__(self, session, menu_path=""):
 		self.resetFull = ConfigYesNo(default=True)
 		self.resetBouquets = ConfigYesNo(default=True)
+		self.resetKeymaps = ConfigYesNo(default=True)
 		self.resetNetworks = ConfigYesNo(default=True)
 		self.resetPlugins = ConfigYesNo(default=True)
 		self.resetResumePoints = ConfigYesNo(default=True)
@@ -55,6 +56,8 @@ class FactoryReset(Setup, ProtectedScreen):
 		if not self.resetFull.value:
 			if len(self.bouquets):
 				self.list.append((_("Remove all bouquet/tuning data"), self.resetBouquets, _("Select 'Yes' to remove all tuning data. Selecting this option will remove all tuning and bouquet data and will make timers non functional until the receiver is retuned.")))
+			if len(self.keymaps):
+				self.list.append((_("Remove all keymap data"), self.resetKeymaps, _("Select 'Yes' to remove all keymap data. Selecting this option will remove all keymap override data and restore the default keymap definitions.")))
 			if len(self.networks):
 				self.list.append((_("Remove all network data"), self.resetNetworks, _("Select 'Yes' to remove all network data. Selecting this option will remove all network data including automounts and network connection data including connection accounts and passwords. This could cause some Enigma2 functions to fail if they are configured to use these network resources.")))
 			if len(self.plugins):
@@ -77,6 +80,7 @@ class FactoryReset(Setup, ProtectedScreen):
 
 	def analyseEnigma2(self):
 		self.bouquets = []
+		self.keymaps = []
 		self.networks = []
 		self.plugins = []
 		self.resumePoints = []
@@ -89,6 +93,8 @@ class FactoryReset(Setup, ProtectedScreen):
 				self.skins.append(file)
 			elif file in ("lamedb", "lamedb5"):
 				self.bouquets.append(file)
+			elif file in ("keymap.xml",):
+				self.keymaps.append(file)
 			elif file in ("automounts.xml",):
 				self.networks.append(file)
 			elif file in ("resumepoints.pkl",):
@@ -128,6 +134,9 @@ class FactoryReset(Setup, ProtectedScreen):
 			if len(self.bouquets) and self.resetBouquets.value:
 				print "[FactoryReset] Performing a bouquets reset."
 				self.wipeFiles(configDir, self.bouquets)
+			if len(self.keymaps) and self.resetKeymaps.value:
+				print "[FactoryReset] Performing a keymap reset."
+				self.wipeFiles(configDir, self.keymaps)
 			if len(self.networks) and self.resetNetworks.value:
 				print "[FactoryReset] Performing a networks reset."
 				self.wipeFiles(configDir, self.networks)
