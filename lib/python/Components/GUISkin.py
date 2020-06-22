@@ -87,7 +87,6 @@ class GUISkin:
 
 	def setTitle(self, title, addToPathList=True):
 		pathText = ""
-		self.skin_title = title
 		if addToPathList and title and config.usage.show_menupath.value != "off":
 			if screenPath.lastSelf != self:
 				screenPath.pathList.append(title)
