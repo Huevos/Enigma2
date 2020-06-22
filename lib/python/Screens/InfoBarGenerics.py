@@ -517,7 +517,7 @@ class SecondInfoBar(Screen):
 		if description and extended:
 			description += '\n'
 		text = description + extended
-		self.setTitle(event.getEventName())
+		self.setTitle(event.getEventName(), addToPathList=False)
 		self["epg_description"].setText(text)
 		serviceref = self.currentService
 		eventid = self.event.getEventId()
@@ -595,6 +595,7 @@ class InfoBarShowHide(InfoBarScreenSaver):
 		self.onExecBegin.append(self.__onExecBegin)
 
 	def __onExecBegin(self):
+		self.clearScreenPath()
 		self.showHideVBI()
 
 	def __layoutFinished(self):
