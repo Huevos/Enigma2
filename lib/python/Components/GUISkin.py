@@ -12,6 +12,8 @@ class GUISkin:
 
 	def __init__(self):
 		self["Title"] = StaticText()
+		self["ScreenPath"] = StaticText()
+		self["menu_path_compressed"] = StaticText()  # Support legacy screen history skins.
 		self.onLayoutFinish = []
 		self.summaries = CList()
 		self.instance = None
@@ -67,11 +69,19 @@ class GUISkin:
 		if summary is not None:
 			self.summaries.remove(summary)
 
-	def setTitle(self, title):
+	def setTitle(self, title, showPath=True):
+		pathText = ""
+		if showPath and config.usage.show_menupath.value != "off" and len(self.session.dialog_stack) > 1:
+			if config.usage.show_menupath.value == "small":
+				pathText = "%s >" % " > ".join(ds[0].getTitle() for ds in self.session.dialog_stack[1:])
+			else:
+				title = "%s > %s" % (self.session.dialog_stack[-1][0].getTitle(), title)
 		if self.instance:
 			self.instance.setTitle(title)
-		self["Title"].text = title
 		self.summaries.setTitle(title)
+		self["Title"].text = title
+		self["ScreenPath"].text = pathText
+		self["menu_path_compressed"].text = pathText  # Support legacy screen history skins.
 
 	def getTitle(self):
 		return self["Title"].text
