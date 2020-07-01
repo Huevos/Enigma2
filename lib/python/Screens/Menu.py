@@ -80,7 +80,7 @@ class Menu(Screen, ProtectedScreen):
 		self.session.openWithCallback(self.menuClosed, *dialog)
 
 	def openSetup(self, dialog):
-		self.session.openWithCallback(self.menuClosed, Setup, dialog, None, full_menu_path)
+		self.session.openWithCallback(self.menuClosed, Setup, dialog)
 
 	def addMenu(self, destList, node):
 		requires = node.get("requires")
@@ -102,10 +102,6 @@ class Menu(Screen, ProtectedScreen):
 		destList.append((MenuTitle, a, entryID, weight))
 
 	def menuClosedWithConfigFlush(self, *res):
-		global menu_path
-		menu_path = ""
-		global full_menu_path
-		full_menu_path = ""
 		configfile.save()
 		self.menuClosed(*res)
 
@@ -269,27 +265,7 @@ class Menu(Screen, ProtectedScreen):
 
 		a = parent.get("title", "").encode("UTF-8") or None
 		a = a and _(a) or _(parent.get("text", "").encode("UTF-8"))
-		self.menu_title = a
-		global menu_path
-		self.menu_path_compressed = menu_path
-		if menu_path == "":
-			menu_path += a
-		elif not menu_path.endswith(a):
-			menu_path += " / " + a
-		global full_menu_path
-		full_menu_path = menu_path + ' / '
-		if config.usage.show_menupath.value == 'large':
-			Screen.setTitle(self, menu_path)
-			self["title"] = StaticText(menu_path)
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			Screen.setTitle(self, a)
-			self["title"] = StaticText(a)
-			self["menu_path_compressed"] = StaticText(self.menu_path_compressed and self.menu_path_compressed + " >" or "")
-		else:
-			Screen.setTitle(self, a)
-			self["title"] = StaticText(a)
-			self["menu_path_compressed"] = StaticText("")
+		self.setTitle(a)
 
 		self.number = 0
 		self.nextNumberTimer = eTimer()
@@ -310,18 +286,10 @@ class Menu(Screen, ProtectedScreen):
 		self.number = 0
 
 	def closeNonRecursive(self):
-		global menu_path
-		menu_path = self.menu_path_compressed
-		global full_menu_path
-		full_menu_path = menu_path + ' / '
 		self.resetNumberKey()
 		self.close(False)
 
 	def closeRecursive(self):
-		global menu_path
-		menu_path = ""
-		global full_menu_path
-		full_menu_path = ""
 		self.resetNumberKey()
 		self.close(True)
 
