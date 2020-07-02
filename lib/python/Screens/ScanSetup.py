@@ -598,20 +598,9 @@ class TerrestrialTransponderSearchSupport:
 		self.terrestrial_search_container.execute(cmd)
 
 class ScanSetup(ConfigListScreen, Screen, CableTransponderSearchSupport, TerrestrialTransponderSearchSupport):
-	def __init__(self, session, menu_path=""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Manual Scan")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Manual Scan"))
 
 		self.finished_cb = None
 		self.updateSatList()
@@ -1737,20 +1726,9 @@ class ScanSimple(ConfigListScreen, Screen, CableTransponderSearchSupport, Terres
 			networks = [ ]
 		return networks
 
-	def __init__(self, session, menu_path=""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Automatic Scan")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Automatic Scan"))
 
 		self["key_red"] = StaticText(_("Close"))
 		self["key_green"] = StaticText(_("Scan"))

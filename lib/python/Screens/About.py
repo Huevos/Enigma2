@@ -23,28 +23,9 @@ from Tools.StbHardware import getFPVersion
 import skin
 
 class About(Screen):
-	def __init__(self, session, menu_path=""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("About")
-		self.menu_path = menu_path
-		if config.usage.show_menupath.value == 'large':
-			self.menu_path += screentitle
-			title = self.menu_path
-			self["menu_path_compressed"] = StaticText("")
-			self.menu_path += ' / '
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			condtext = ""
-			if self.menu_path and not self.menu_path.endswith(' / '):
-				condtext = self.menu_path + " >"
-			elif self.menu_path:
-				condtext = self.menu_path[:-3] + " >"
-			self["menu_path_compressed"] = StaticText(condtext)
-			self.menu_path += screentitle + ' / '
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("About"))
 		self.skinName = "AboutOE"
 		self.populate()
 
@@ -198,32 +179,21 @@ class About(Screen):
 				return False
 
 	def showTranslationInfo(self):
-		self.session.open(TranslationInfo, self.menu_path)
+		self.session.open(TranslationInfo)
 
 	def showUpdatePlugin(self):
-		self.session.open(UpdatePlugin, self.menu_path)
+		self.session.open(UpdatePlugin)
 
 	def showAboutReleaseNotes(self):
-		self.session.open(CommitInfo, self.menu_path)
+		self.session.open(CommitInfo)
 
 	def createSummary(self):
 		return AboutSummary
 
 class Devices(Screen):
-	def __init__(self, session, menu_path = ""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Devices")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Devices"))
 		self["TunerHeader"] = StaticText(_("Detected tuners:"))
 		self["HDDHeader"] = StaticText(_("Detected devices:"))
 		self["MountsHeader"] = StaticText(_("Network servers:"))
@@ -354,20 +324,9 @@ class Devices(Screen):
 
 
 class SystemMemoryInfo(Screen):
-	def __init__(self, session, menu_path = ""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Memory")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Memory"))
 		self.skinName = ["SystemMemoryInfo", "About"]
 		self["lab1"] = StaticText(_("Virtuosso Image Xtreme"))
 		self["lab2"] = StaticText(_("By Team ViX"))
@@ -429,20 +388,9 @@ class SystemMemoryInfo(Screen):
 
 
 class SystemNetworkInfo(Screen):
-	def __init__(self, session, menu_path = ""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Network")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Network"))
 		self.skinName = ["SystemNetworkInfo", "WlanStatus"]
 		self["LabelBSSID"] = StaticText()
 		self["LabelESSID"] = StaticText()
@@ -702,8 +650,8 @@ class SystemNetworkInfo(Screen):
 
 
 class AboutSummary(Screen):
-	def __init__(self, session, parent):
-		Screen.__init__(self, session, parent=parent)
+	def __init__(self, session, args=None):
+		Screen.__init__(self, session)
 		self["selected"] = StaticText("ViX:" + getImageVersion())
 
 		AboutText = _("Model: %s %s\n") % (getMachineBrand(), getMachineName())
@@ -741,20 +689,9 @@ class AboutSummary(Screen):
 		self["AboutText"] = StaticText(AboutText)
 
 class TranslationInfo(Screen):
-	def __init__(self, session, menu_path=""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Translations")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Translations"))
 		# don't remove the string out of the _(), or it can't be "translated" anymore.
 
 		# TRANSLATORS: Add here whatever should be shown in the "translator" about screen, up to 6 lines (use \n for newline)

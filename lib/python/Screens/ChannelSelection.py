@@ -67,7 +67,7 @@ FLAG_CENTER_DVB_SUBS = 2048 #define in lib/dvb/idvb.h as dxNewFound = 64 and dxI
 class BouquetSelector(Screen):
 	def __init__(self, session, bouquets, selectedFunc, enableWrapAround=True):
 		Screen.__init__(self, session)
-		Screen.setTitle(self, _("Choose Bouquet"))
+		self.setTitle(_("Choose Bouquet"))
 
 		self.selectedFunc=selectedFunc
 
@@ -153,7 +153,7 @@ class ChannelContextMenu(Screen):
 	def __init__(self, session, csel):
 
 		Screen.__init__(self, session)
-		Screen.setTitle(self, _("Channel list context menu"))
+		self.setTitle(_("Channel List Context Menu"))
 		self.csel = csel
 		self.bsel = None
 		if self.isProtected():
@@ -2708,7 +2708,7 @@ class PiPZapSelection(ChannelSelection):
 class RadioInfoBar(Screen):
 	def __init__(self, session):
 		Screen.__init__(self, session)
-		Screen.setTitle(self, _("Radio Channel Selection"))
+		self.setTitle(_("Radio Channel Selection"))
 		self['RdsDecoder'] = RdsDecoder(self.session.nav)
 
 
@@ -2931,7 +2931,7 @@ class HistoryZapSelector(Screen):
 				"jumpNextMark": self.next,
 				"toggleMark": self.okbuttonClick,
 			})
-		self.setTitle(_("History zap..."))
+		self.setTitle(_("History Zap"))
 		self.list = []
 		cnt = 0
 		serviceHandler = eServiceCenter.getInstance()

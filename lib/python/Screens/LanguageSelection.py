@@ -31,20 +31,9 @@ def _cached(x):
 	return LANG_TEXT.get(config.osd.language.value, {}).get(x, "")
 
 class LanguageSelection(Screen):
-	def __init__(self, session, menu_path=""):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
-		screentitle = _("Language")
-		if config.usage.show_menupath.value == 'large':
-			menu_path += screentitle
-			title = menu_path
-			self["menu_path_compressed"] = StaticText("")
-		elif config.usage.show_menupath.value == 'small':
-			title = screentitle
-			self["menu_path_compressed"] = StaticText(menu_path + " >" if not menu_path.endswith(' / ') else menu_path[:-3] + " >" or "")
-		else:
-			title = screentitle
-			self["menu_path_compressed"] = StaticText("")
-		Screen.setTitle(self, title)
+		self.setTitle(_("Language"))
 
 		language.InitLang()
 		self.oldActiveLanguage = language.getActiveLanguage()
@@ -90,7 +79,6 @@ class LanguageSelection(Screen):
 		self.selectActiveLanguage()
 		
 	def selectActiveLanguage(self):
-		self.setTitle(self.title)
 		activeLanguage = language.getActiveLanguage()
 		pos = 0
 		for pos, x in enumerate(self.list):
@@ -170,7 +158,7 @@ class LanguageSelection(Screen):
 		lang = self["languages"].getCurrent()[0]
 
 		if lang == 'update cache':
-			self.setTitle(_("Updating cache"))
+			self.setTitle(_("Updating Cache"))
 			self["summarylangname"].setText(_("Updating cache"))
 			return
 
