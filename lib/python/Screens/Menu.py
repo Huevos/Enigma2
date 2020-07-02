@@ -266,6 +266,7 @@ class Menu(Screen, ProtectedScreen):
 		a = parent.get("title", "").encode("UTF-8") or None
 		a = a and _(a) or _(parent.get("text", "").encode("UTF-8"))
 		self.setTitle(a)
+		self["title"] = StaticText(a)  # For compatibility with display skins.
 
 		self.number = 0
 		self.nextNumberTimer = eTimer()
