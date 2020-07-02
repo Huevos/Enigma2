@@ -45,8 +45,25 @@ class MenuUpdater:
 
 menuupdater = MenuUpdater()
 
+
 class MenuSummary(Screen):
-	pass
+	def __init__(self, session, parent):
+		Screen.__init__(self, session, parent=parent)
+		self["MenuTitle"] = StaticText(parent.getTitle())
+		self["MenuEntry"] = StaticText("")
+		self.onShow.append(self.addWatcher)
+		self.onHide.append(self.removeWatcher)
+
+	def addWatcher(self):
+		self.parent["menu"].onSelectionChanged.append(self.selectionChanged)
+	 	self.selectionChanged()
+
+	def removeWatcher(self):
+		self.parent["menu"].onSelectionChanged.remove(self.selectionChanged)
+
+	def selectionChanged(self):
+		self["MenuEntry"].text = self.parent["menu"].getCurrent()[0]
+
 
 class Menu(Screen, ProtectedScreen):
 	ALLOW_SUSPEND = True
