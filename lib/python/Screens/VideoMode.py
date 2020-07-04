@@ -20,7 +20,7 @@ from Components.AVSwitch import iAVSwitch
 resolutionlabel = None
 
 class VideoSetup(Screen, ConfigListScreen):
-	def __init__(self, session):
+	def __init__(self, session, args=None):
 		Screen.__init__(self, session)
 		self.skinName = ["Setup" ]
 		self.setTitle(_("Video & Audio Settings"))
