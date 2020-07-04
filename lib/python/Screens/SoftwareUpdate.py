@@ -26,8 +26,8 @@ from Components.Slider import Slider
 ocram = ''
 
 class SoftwareUpdateChanges(CommitInfo):
-	def __init__(self, session, parent=None):
-		CommitInfo.__init__(self, session, parent=parent)
+	def __init__(self, session, args=None):
+		CommitInfo.__init__(self, session)
 
 		self["actions"] = ActionMap(["SetupActions", "DirectionActions"],
 		{
@@ -42,7 +42,7 @@ class SoftwareUpdateChanges(CommitInfo):
 		self["key_red"] = Button(_("Close"))
 
 	def readGithubCommitLogs(self):
-		self.updateScreenTitle(gitcommitinfo.getScreenTitle())
+		self.setTitle(gitcommitinfo.getScreenTitle())
 		self["AboutScrollLabel"].setText(gitcommitinfo.readGithubCommitLogsSoftwareUpdate())
 
 
