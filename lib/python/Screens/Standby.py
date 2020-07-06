@@ -162,7 +162,7 @@ class Standby2(Screen):
 		self.session.nav.stopService()
 
 class Standby(Standby2):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		if Screens.InfoBar.InfoBar and Screens.InfoBar.InfoBar.instance and Screens.InfoBar.InfoBar.ptsGetTimeshiftStatus(Screens.InfoBar.InfoBar.instance):
 			self.skin = """<screen position="0,0" size="0,0"/>"""
 			Screen.__init__(self, session)

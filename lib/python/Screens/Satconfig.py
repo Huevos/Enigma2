@@ -590,7 +590,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		else:
 			self.restartPrevService()
 
-	def __init__(self, session, slotid, args=None):
+	def __init__(self, session, slotid):
 		Screen.__init__(self, session)
 		self.setTitle(_("Tuner Settings"))
 
@@ -727,7 +727,7 @@ class NimSetup(Screen, ConfigListScreen, ServiceStopScreen):
 		return cc
 
 class NimSelection(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Tuner Setup"))
 
@@ -895,7 +895,7 @@ class SelectSatsEntryScreen(Screen):
 			<ePixmap pixmap="skin_default/div-h.png" position="0,375" zPosition="1" size="540,2" transparent="1" alphatest="on" />
 			<widget name="hint" position="10,380" size="540,25" font="Regular;19" halign="center" transparent="1" />
 		</screen>"""
-	def __init__(self, session, args=None, userSatlist=""):
+	def __init__(self, session, userSatlist=""):
 		Screen.__init__(self, session)
 		self.setTitle(_("Select Satellites"))
 

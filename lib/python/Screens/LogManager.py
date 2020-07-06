@@ -161,7 +161,7 @@ class LogManagerPoller:
 		self.TrashTimer.startLongTimer(43200) #twice a day
 
 class LogManager(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.logtype = 'crashlogs'
 

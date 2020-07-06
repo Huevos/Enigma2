@@ -376,7 +376,7 @@ class oscMenuList(MenuList):
 		self.l.setFont(3, gFont("Regular", int(12*f)))
 
 class OscamInfoMenu(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Oscam Info - Main Menu"))
 		self.menu = [ _("Show /tmp/ecm.info"), _("Show Clients"), _("Show Readers/Proxies"), _("Show Log"), _("Card infos (CCcam-Reader)"), _("ECM Statistics"), _("Setup") ]

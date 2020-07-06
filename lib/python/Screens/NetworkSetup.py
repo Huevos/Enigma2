@@ -128,7 +128,7 @@ class NSCommon:
 		return NetworkServicesSummary
 
 class NetworkAdapterSelection(Screen,HelpableScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
 		self.setTitle(_("Device"))
@@ -336,7 +336,7 @@ class NetworkAdapterSelection(Screen,HelpableScreen):
 
 
 class NameserverSetup(Screen, ConfigListScreen, HelpableScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
 		self.setTitle(_("Nameserver Settings"))
@@ -420,7 +420,7 @@ class NameserverSetup(Screen, ConfigListScreen, HelpableScreen):
 			self.createSetup()
 
 class NetworkMacSetup(Screen, ConfigListScreen, HelpableScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
 		self.setTitle(_("MAC Address Settings"))
@@ -1621,7 +1621,7 @@ class NetworkAdapterTest(Screen):
 			iStatus.stopWlanConsole()
 
 class NetworkMountsMenu(Screen,HelpableScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
 		self.setTitle(_("Mounts"))
@@ -1721,7 +1721,7 @@ class NetworkMountsMenu(Screen,HelpableScreen):
 		return menu
 
 class NetworkAfp(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("AFP"))
 		self.skinName = "NetworkServiceSetup"
@@ -1798,7 +1798,7 @@ class NetworkAfp(NSCommon,Screen):
 			cb(title, status_summary, autostartstatus_summary)
 
 class NetworkFtp(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("FTP"))
 		self.skinName = "NetworkServiceSetup"
@@ -1877,7 +1877,7 @@ class NetworkFtp(NSCommon,Screen):
 			cb(title, status_summary, autostartstatus_summary)
 
 class NetworkNfs(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("NFS"))
 		self.skinName = "NetworkServiceSetup"
@@ -1951,7 +1951,7 @@ class NetworkNfs(NSCommon,Screen):
 
 
 class NetworkOpenvpn(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("OpenVPN"))
 		self.skinName = "NetworkServiceSetup"
@@ -2028,7 +2028,7 @@ class NetworkOpenvpn(NSCommon,Screen):
 			cb(title, status_summary, autostartstatus_summary)
 
 class NetworkVpnLog(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 		self.skinName = "NetworkInadynLog"
@@ -2053,7 +2053,7 @@ class NetworkVpnLog(Screen):
 		self['infotext'].setText(strview)
 
 class NetworkSamba(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Samba"))
 		self.skinName = "NetworkServiceSetup"
@@ -2139,7 +2139,7 @@ class NetworkSamba(NSCommon,Screen):
 			cb(title, status_summary, autostartstatus_summary)
 
 class NetworkSambaLog(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 		self.skinName = "NetworkInadynLog"
@@ -2164,7 +2164,7 @@ class NetworkSambaLog(Screen):
 		self['infotext'].setText(strview)
 
 class NetworkTelnet(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Telnet"))
 		self.skinName = "NetworkServiceSetup"
@@ -2241,7 +2241,7 @@ class NetworkTelnet(NSCommon,Screen):
 			cb(title, status_summary, autostartstatus_summary)
 
 class NetworkInadyn(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Inadyn"))
 		self.onChangedEntry = [ ]
@@ -2367,7 +2367,7 @@ class NetworkInadyn(NSCommon,Screen):
 		self.session.open(NetworkInadynLog)
 
 class NetworkInadynSetup(Screen, ConfigListScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Settings"))
 		self.onChangedEntry = [ ]
@@ -2506,7 +2506,7 @@ class NetworkInadynSetup(Screen, ConfigListScreen):
 			self["config"].getCurrent()[1].help_window.instance.hide()
 
 class NetworkInadynLog(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 		self['infotext'] = ScrollLabel('')
@@ -2528,7 +2528,7 @@ class NetworkInadynLog(Screen):
 config.networkushare = ConfigSubsection()
 config.networkushare.mediafolders = NoSave(ConfigLocations(default=""))
 class NetworkuShare(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("uShare"))
 		self.onChangedEntry = [ ]
@@ -2690,7 +2690,7 @@ class NetworkuShare(NSCommon,Screen):
 		self.session.open(NetworkuShareLog)
 
 class NetworkuShareSetup(Screen, ConfigListScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.onChangedEntry = [ ]
 		self.list = []
@@ -2853,7 +2853,7 @@ class NetworkuShareSetup(Screen, ConfigListScreen):
 		self.session.openWithCallback(self.updateList,uShareSelection)
 
 class uShareSelection(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Select Folders"))
 		self["key_red"] = StaticText(_("Cancel"))
@@ -2929,7 +2929,7 @@ class uShareSelection(Screen):
 			self.filelist.descent()
 
 class NetworkuShareLog(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 		self.skinName = "NetworkInadynLog"
@@ -2956,7 +2956,7 @@ class NetworkuShareLog(Screen):
 config.networkminidlna = ConfigSubsection()
 config.networkminidlna.mediafolders = NoSave(ConfigLocations(default=""))
 class NetworkMiniDLNA(NSCommon,Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("MiniDLNA"))
 		self.onChangedEntry = [ ]
@@ -3103,7 +3103,7 @@ class NetworkMiniDLNA(NSCommon,Screen):
 		self.session.open(NetworkMiniDLNALog)
 
 class NetworkMiniDLNASetup(Screen, ConfigListScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.onChangedEntry = [ ]
 		self.list = []
@@ -3252,7 +3252,7 @@ class NetworkMiniDLNASetup(Screen, ConfigListScreen):
 		self.session.openWithCallback(self.updateList,MiniDLNASelection)
 
 class MiniDLNASelection(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Select Folders"))
 		self.skinName = "uShareSelection"
@@ -3329,7 +3329,7 @@ class MiniDLNASelection(Screen):
 			self.filelist.descent()
 
 class NetworkMiniDLNALog(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 		self.skinName = "NetworkInadynLog"
@@ -3375,7 +3375,7 @@ class NetworkServicesSummary(Screen):
 		self["autostartstatus_summary"].text = autostartstatus_summary
 
 class NetworkPassword(ConfigListScreen, Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Password Setup"))
 		self.skinName = "Setup"

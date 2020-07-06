@@ -28,12 +28,12 @@ class TimerEditList(Screen, ProtectedScreen):
 	DELETE = 4
 	STOP = 5
 
-	def __init__(self, session, args=None, selectItem = None):
+	def __init__(self, session, selectItem=None):
 		Screen.__init__(self, session)
 		self.selectItem = selectItem
 		ProtectedScreen.__init__(self)
 		self.setTitle(_("Timer List"))
-		
+
 		self.onChangedEntry = [ ]
 		self.list = []
 		self["timerlist"] = TimerList(self.list)
@@ -412,7 +412,7 @@ class TimerSanityConflict(Screen):
 	DISABLE = 2
 	EDIT = 3
 
-	def __init__(self, session, timer, args=None):
+	def __init__(self, session, timer):
 		Screen.__init__(self, session)
 		self.setTitle(_("Timer Sanity Error"))
 

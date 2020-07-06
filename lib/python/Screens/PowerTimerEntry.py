@@ -15,7 +15,7 @@ from time import localtime, mktime, time, strftime
 from datetime import datetime
 
 class TimerEntry(Screen, ConfigListScreen):
-	def __init__(self, session, timer, args=None):
+	def __init__(self, session, timer):
 		Screen.__init__(self, session)
 		self.setTitle(_("Power Timer Edit"))
 
@@ -339,7 +339,7 @@ class TimerEntry(Screen, ConfigListScreen):
 		self.close((False,))
 
 class TimerLog(Screen):
-	def __init__(self, session, timer, args=None):
+	def __init__(self, session, timer):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 

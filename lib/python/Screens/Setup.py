@@ -91,6 +91,7 @@ class Setup(ConfigListScreen, Screen):
 		self.force_update_list = False
 		self.plugin = plugin
 		self.PluginLanguageDomain = PluginLanguageDomain
+		self.setup = {}
 
 		xmldata = setupdom(self.plugin).getroot()
 		for x in xmldata.findall("setup"):
@@ -99,11 +100,11 @@ class Setup(ConfigListScreen, Screen):
 				break
 
 		if config.usage.show_menupath.value in ('large', 'small') and x.get("titleshort", "").encode("UTF-8") != "":
-			setupTitle = x.get("titleshort", "").encode("UTF-8")
+			title = x.get("titleshort", "").encode("UTF-8")
 		else:
-			setupTitle = x.get("title", "").encode("UTF-8")
-		setupTitle = _("Setup" if setupTitle == "" else setupTitle)
-		self.setTitle(setupTitle)
+			title = x.get("title", "").encode("UTF-8")
+		title = _("Setup" if title == "" else title)
+		self.setTitle(title)
 		self.seperation = int(self.setup.get('separation', '0'))
 
 		ConfigListScreen.__init__(self, self.list, session = session, on_change = self.changedEntry)

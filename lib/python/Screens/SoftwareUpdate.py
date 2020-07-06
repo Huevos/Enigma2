@@ -26,7 +26,7 @@ from Components.Slider import Slider
 ocram = ''
 
 class SoftwareUpdateChanges(CommitInfo):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		CommitInfo.__init__(self, session)
 
 		self["actions"] = ActionMap(["SetupActions", "DirectionActions"],

@@ -188,7 +188,7 @@ def getButtonSetupFunctions():
 	return ButtonSetupFunctions
 
 class ButtonSetup(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Button Setup"))
 		self['description'] = Label(_('On your remote, click on the button you want to change'))
@@ -254,7 +254,7 @@ class ButtonSetup(Screen):
 			self["choosen"].setList(selected)
 
 class ButtonSetupSelect(Screen):
-	def __init__(self, session, key, args=None):
+	def __init__(self, session, key):
 		Screen.__init__(self, session)
 		self.skinName="ButtonSetupSelect"
 		self['description'] = Label(_('Select the desired function and click on "OK" to assign it. Use "CH+/-" to toggle between the lists. Select an assigned function and click on "OK" to de-assign it. Use "Next/Previous" to change the order of the assigned functions.'))
