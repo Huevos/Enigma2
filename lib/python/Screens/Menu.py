@@ -22,8 +22,6 @@ file = open(resolveFilename(SCOPE_SKIN, 'menu.xml'), 'r')
 mdom = xml.etree.cElementTree.parse(file)
 file.close()
 
-menu_path = ""
-full_menu_path = ""
 
 class MenuUpdater:
 	def __init__(self):
@@ -142,10 +140,9 @@ class Menu(Screen, ProtectedScreen):
 		weight = node.get("weight", 50)
 		for x in node:
 			if x.tag == 'screen':
-				args = 'full_menu_path'
 				module = x.get("module")
 				screen = x.get("screen")
-				
+
 				if screen is None:
 					screen = module
 
@@ -154,11 +151,12 @@ class Menu(Screen, ProtectedScreen):
 					module = "Screens." + module
 				else:
 					module = ""
+
 				# check for arguments. they will be appended to the
 				# openDialog call
-				if x.text:
-					args = x.text or ""
+				args = x.text or ""
 				screen += ", " + args
+
 				destList.append((_(item_text or "??"), boundFunction(self.runScreen, (module, screen)), entryID, weight))
 				return
 			elif x.tag == 'plugin':
