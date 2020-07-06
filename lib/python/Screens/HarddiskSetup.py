@@ -13,7 +13,7 @@ import Screens.InfoBar
 
 
 class HarddiskSetup(Screen):
-	def __init__(self, session, hdd, action, text, question, args=None):
+	def __init__(self, session, hdd, action, text, question):
 		Screen.__init__(self, session)
 		self.setTitle(text)
 
@@ -79,7 +79,7 @@ class HarddiskSetup(Screen):
 
 
 class HarddiskSelection(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Initialize Devices"))
 
@@ -100,7 +100,7 @@ class HarddiskSelection(Screen):
 		self.session.openWithCallback(self.close, HarddiskSetup, selection,
 			 action=selection.createInitializeJob,
 			 text=_("Initialize"),
-			 question=_("Do you really want to initialize this device?\nAll the data on the device will be lost!"), menu_path=self.menu_path)
+			 question=_("Do you really want to initialize this device?\nAll the data on the device will be lost!"))
 
 	def okbuttonClick(self):
 		selection = self["hddlist"].getCurrent()
@@ -110,7 +110,7 @@ class HarddiskSelection(Screen):
 
 # This is actually just HarddiskSelection but with correct type
 class HarddiskFsckSelection(HarddiskSelection):
-	def __init__(self, session, menu_path=""):
+	def __init__(self, session):
 		HarddiskSelection.__init__(self, session)
 		self.setTitle(_("Filesystem Check"))
 		self.skinName = "HarddiskSelection"
@@ -119,4 +119,4 @@ class HarddiskFsckSelection(HarddiskSelection):
 		self.session.openWithCallback(self.close, HarddiskSetup, selection,
 			 action=selection.createCheckJob,
 			 text=_("Check"),
-			 question=_("Do you really want to check the filesystem?\nThis could take a long time!"), menu_path=self.menu_path)
+			 question=_("Do you really want to check the filesystem?\nThis could take a long time!"))

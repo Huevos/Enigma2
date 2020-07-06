@@ -14,7 +14,7 @@ from enigma import getPeerStreamingBoxes
 import re
 
 class FallbackTunerSetup(ConfigListScreen, Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Fallback Tuner Setup"))
 		self.skinName = ["FallbackTunerSetup", "Setup"]

@@ -27,7 +27,7 @@ from RecordTimer import AFTEREVENT
 
 
 class TimerEntry(ConfigListScreen, Screen):
-	def __init__(self, session, timer, args=None):
+	def __init__(self, session, timer):
 		Screen.__init__(self, session)
 		self.setTitle(_("Timer Edit"))
 
@@ -525,7 +525,7 @@ class TimerEntry(ConfigListScreen, Screen):
 			self["config"].invalidate(self.tagsSet)
 
 class TimerLog(Screen):
-	def __init__(self, session, timer, args=None, tmp=""):
+	def __init__(self, session, timer):
 		Screen.__init__(self, session)
 		self.setTitle(_("Log"))
 

@@ -16,7 +16,7 @@ from time import sleep
 from boxbranding import getMachineBrand, getMachineName, getImageType
 
 class CronTimers(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		if path.exists('/usr/scripts') and not path.exists('/usr/script'):
 			rename('/usr/scripts', '/usr/script')
@@ -310,7 +310,7 @@ class CronTimersConfig(Screen, ConfigListScreen):
 		ConfigListScreen.__init__(self, self.list, session = self.session, on_change = self.changedEntry)
 		self['key_red'] = Label(_("Close"))
 		self['key_green'] = Label(_("Save"))
-		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"], 
+		self['actions'] = ActionMap(['WizardActions', 'ColorActions', "MenuActions"],
 		{
 			'red': self.close,
 			'green': self.checkentry,

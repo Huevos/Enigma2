@@ -174,7 +174,7 @@ def right():
 gitcommitinfo = modules[__name__]
 
 class CommitInfo(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.skinName = ["CommitInfo", "AboutOE"]
 		self["AboutScrollLabel"] = ScrollLabel(_("Please wait"))

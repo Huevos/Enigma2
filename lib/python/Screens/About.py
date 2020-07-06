@@ -23,7 +23,7 @@ from Tools.StbHardware import getFPVersion
 import skin
 
 class About(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("About"))
 		self.skinName = "AboutOE"
@@ -70,7 +70,7 @@ class About(Screen):
 
 		if SystemInfo["HasH9SD"]:
 			if "rootfstype=ext4" in open('/sys/firmware/devicetree/base/chosen/bootargs', 'r').read():
-				part = "        - SD card in use for Image root \n" 
+				part = "        - SD card in use for Image root \n"
 			else:
 				part = "        - eMMC slot in use for Image root \n"
 			AboutText += _("%s") % part
@@ -80,7 +80,7 @@ class About(Screen):
 			part = "eMMC slot %s" %slot
 			bootmode = ""
 			if SystemInfo["canMode12"]:
-				bootmode = "bootmode = %s" %GetCurrentImageMode()		
+				bootmode = "bootmode = %s" %GetCurrentImageMode()
 			print "[About] HasHiSi = %s, slot = %s" %(SystemInfo["HasHiSi"], slot)
 			if SystemInfo["HasHiSi"] and "sda" in SystemInfo["canMultiBoot"][slot]['root']:
 				if slot > 4:
@@ -191,7 +191,7 @@ class About(Screen):
 		return AboutSummary
 
 class Devices(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Devices"))
 		self["TunerHeader"] = StaticText(_("Detected tuners:"))
@@ -324,7 +324,7 @@ class Devices(Screen):
 
 
 class SystemMemoryInfo(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Memory"))
 		self.skinName = ["SystemMemoryInfo", "About"]
@@ -388,7 +388,7 @@ class SystemMemoryInfo(Screen):
 
 
 class SystemNetworkInfo(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Network"))
 		self.skinName = ["SystemNetworkInfo", "WlanStatus"]
@@ -650,8 +650,8 @@ class SystemNetworkInfo(Screen):
 
 
 class AboutSummary(Screen):
-	def __init__(self, session, args=None):
-		Screen.__init__(self, session)
+	def __init__(self, session, parent):
+		Screen.__init__(self, session, parent=parent)
 		self["selected"] = StaticText("ViX:" + getImageVersion())
 
 		AboutText = _("Model: %s %s\n") % (getMachineBrand(), getMachineName())
@@ -689,7 +689,7 @@ class AboutSummary(Screen):
 		self["AboutText"] = StaticText(AboutText)
 
 class TranslationInfo(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Translations"))
 		# don't remove the string out of the _(), or it can't be "translated" anymore.

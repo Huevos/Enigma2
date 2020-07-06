@@ -65,7 +65,7 @@ class PluginBrowserSummary(Screen):
 
 
 class PluginBrowser(Screen, ProtectedScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Plugin Browser"))
 		ProtectedScreen.__init__(self)
@@ -265,7 +265,7 @@ class PluginDownloadBrowser(Screen):
 	PLUGIN_PREFIX2 = []
 	lastDownloadDate = None
 
-	def __init__(self, session, type = 0, needupdate = True, args=None, skin_name=None):
+	def __init__(self, session, type=0, needupdate=True, skin_name=None):
 		Screen.__init__(self, session)
 		self.type = type
 		self.needupdate = needupdate
@@ -495,7 +495,7 @@ class PluginDownloadBrowser(Screen):
 
 	def startIpkgListAvailable(self):
 		self.container.execute(self.ipkg + Ipkg.opkgExtraDestinations() + " list")
-		
+
 	def startRun(self):
 		listsize = self["list"].instance.size()
 		self["list"].instance.hide()
@@ -660,7 +660,7 @@ class PluginDownloadBrowser(Screen):
 								countryIcon = LoadPixmap(resolveFilename(SCOPE_ACTIVE_SKIN, "countries/missing.png"))
 							self.plugins[split[0]].append((PluginDescriptor(name = x[0], description = x[2], icon = countryIcon), t[1], x[1]))
 							break
-							
+
 			else:
 				if len(split) < 2:
 					continue

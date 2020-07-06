@@ -142,25 +142,9 @@ class Screen(dict):
 				val.onHide()
 
 	def getScreenPath(self):
-		print("[Screen] DEBUG: getTitle screenPath='%s', screenTitle='%s'." % (self.screenPath, self.screenTitle))
 		return self.screenPath
 
-	def setTitleOld(self, title, showPath=True):
-		self.screenTitle = title
-		pathText = ""
-		if showPath and config.usage.show_menupath.value != "off" and len(self.session.dialog_stack) > 1:
-			if config.usage.show_menupath.value == "small":
-				pathText = "%s >" % " > ".join(ds[0].getTitle() for ds in self.session.dialog_stack[1:])
-			else:
-				title = "%s > %s" % (self.session.dialog_stack[-1][0].getTitle(), title)
-		if self.instance:
-			self.instance.setTitle(title)
-		self.summaries.setTitle(title)
-		self["Title"].text = title
-		self["ScreenPath"].text = pathText
-		self["menu_path_compressed"].text = pathText  # Support legacy screen history skins.
-
-	def setTitle(self, title, showPath=True):
+	def setTitle(self, title):
 		if len(self.session.dialog_stack) > 1:
 			self.screenPath = " > ".join(ds[0].getTitle() for ds in self.session.dialog_stack[1:])
 		self.screenTitle = title
@@ -179,10 +163,8 @@ class Screen(dict):
 		self["ScreenPath"].text = screenPath
 		self["menu_path_compressed"].text = screenPath  # Support legacy screen history skins.
 		self["Title"].text = screenTitle
-		print("[Screen] DEBUG: setTitle path='%s', title='%s', screenPath='%s', screenTitle='%s'." % (self.screenPath, title, screenPath, screenTitle))
 
 	def getTitle(self):
-		print("[Screen] DEBUG: getTitle screenPath='%s', screenTitle='%s'." % (self.screenPath, self.screenTitle))
 		return self.screenTitle
 
 	title = property(getTitle, setTitle)
@@ -283,7 +265,7 @@ class Screen(dict):
 			applyAllAttributes(w.instance, desktop, w.skinAttributes, self.scale)
 		for f in self.onLayoutFinish:
 			# DEBUG: if type(f) is not type(self.close):  # Is this the best way to do this?
-			# Is the following an acceptable fix?
+			# DEBUG: Is the following an acceptable fix?
 			if not isinstance(f, type(self.close)):
 				exec f in globals(), locals()
 			else:

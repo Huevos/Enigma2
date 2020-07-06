@@ -60,7 +60,7 @@ class TimeshiftSettings(Screen,ConfigListScreen):
 			self.setTitle(_(x.get("title", "Setup").encode("UTF-8")))
 			self.seperation = int(x.get('separation', '0'))
 
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.skinName = "Setup"
 		self['footnote'] = Label()

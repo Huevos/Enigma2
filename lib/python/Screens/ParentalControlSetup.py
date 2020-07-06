@@ -29,7 +29,7 @@ class ProtectedScreen:
 		self.close(None)
 
 class ParentalControlSetup(Screen, ConfigListScreen, ProtectedScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		ProtectedScreen.__init__(self)
 		self.setTitle(_("Parental Control"))

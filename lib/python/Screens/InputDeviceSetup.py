@@ -12,7 +12,7 @@ from Tools.LoadPixmap import LoadPixmap
 from boxbranding import getBoxType, getMachineBrand, getMachineName, getMachineBuild
 
 class InputDeviceSelection(Screen, HelpableScreen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		HelpableScreen.__init__(self)
 		self.setTitle(_("Input Devices"))
@@ -251,7 +251,7 @@ class RemoteControlType(Screen, ConfigListScreen):
 	odinRemote = "OdinM9"
 	if getBoxType() == "maram9":
 		odinRemote = "MaraM9"
-	
+
 	rcList = [
 			("0", _("Default")),
 			("3", _(odinRemote)),
@@ -321,7 +321,7 @@ class RemoteControlType(Screen, ConfigListScreen):
 			("h10", 28)
 		]
 
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.skinName = ["RemoteControlType", "Setup" ]
 

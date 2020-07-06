@@ -31,7 +31,7 @@ def _cached(x):
 	return LANG_TEXT.get(config.osd.language.value, {}).get(x, "")
 
 class LanguageSelection(Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Language"))
 
@@ -77,7 +77,7 @@ class LanguageSelection(Screen):
 		language.updateLanguageCache()
 		self["languages"].setList(self.list)
 		self.selectActiveLanguage()
-		
+
 	def selectActiveLanguage(self):
 		activeLanguage = language.getActiveLanguage()
 		pos = 0
@@ -89,7 +89,7 @@ class LanguageSelection(Screen):
 	def save(self):
 		self.run()
 		global inWizzard
-#		print "[LanguageSelection] save function inWizzard is %s", %inWizzard  
+#		print "[LanguageSelection] save function inWizzard is %s", %inWizzard
 		if inWizzard:
 			inWizzard = False
 			#self.session.openWithCallback(self.deletelanguagesCB, MessageBox, _("Do you want to delete all other languages?"), default = False)

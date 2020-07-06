@@ -15,7 +15,7 @@ from Components.Pixmap import Pixmap
 from enigma import ePoint
 
 class ClientModeScreen(ConfigListScreen, Screen):
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.setTitle(_("Client Mode"))
 		self.skinName = "Setup"

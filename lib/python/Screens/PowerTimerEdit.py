@@ -22,7 +22,7 @@ class PowerTimerEditList(Screen):
 	CLEANUP = 3
 	DELETE = 4
 
-	def __init__(self, session, args=None):
+	def __init__(self, session):
 		Screen.__init__(self, session)
 		self.skinName = "TimerEditList"
 		self.setTitle(_("Power Timer List"))
