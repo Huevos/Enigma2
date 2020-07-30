@@ -148,6 +148,8 @@ class Screen(dict):
 		try:  # This protects against calls to setTitle() before being fully initialised like self.session is accessed *before* being defined.
 			if self.session and len(self.session.dialog_stack) > 1:
 				self.screenPath = " > ".join(ds[0].getTitle() for ds in self.session.dialog_stack[1:])
+			else:
+				self.screenPath = ""
 			if self.instance:
 				self.instance.setTitle(title)
 			self.summaries.setTitle(title)
@@ -267,10 +269,9 @@ class Screen(dict):
 				# w.instance.thisown = 0
 			applyAllAttributes(w.instance, desktop, w.skinAttributes, self.scale)
 		for f in self.onLayoutFinish:
-			# DEBUG: if type(f) is not type(self.close):  # Is this the best way to do this?
-			# DEBUG: Is the following an acceptable fix?
 			if not isinstance(f, type(self.close)):
-				exec f in globals(), locals()
+				exec f in globals(), locals()  # Python 2
+				# exec(f, globals(), locals())  # Python 3
 			else:
 				f()
 
