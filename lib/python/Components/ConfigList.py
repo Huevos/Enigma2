@@ -177,7 +177,7 @@ class ConfigListScreen:
 			"menu": (self.keyMenu, _("Display selection list as a selection menu")),
 		}, prio=-1, description=_("Common Setup Functions"))
 		self["menuConfigActions"].setEnabled(False)
-		self["textConfigActions"] = HelpableNumberActionMap(self, "ConfigListActions", {
+		self["smsConfigActions"] = HelpableNumberActionMap(self, "ConfigListActions", {
 			"toggleOverwrite": (self.keyToggleOW, _("Toggle new text inserts before or overwrites existing text")),
 			"backspace": (self.keyBackspace, _("Delete the character to the left of cursor")),
 			"delete": (self.keyDelete, _("Delete the character under the cursor")),
@@ -193,7 +193,7 @@ class ConfigListScreen:
 			"0": (self.keyNumberGlobal, _("Number or SMS style data entry")),
 			"gotAsciiCode": (self.keyGotAscii, _("Keyboard data entry"))
 		}, prio=-1, description=_("Common Setup Functions"))
-		self["textConfigActions"].setEnabled(False)
+		self["smsConfigActions"].setEnabled(False)
 		self["VirtualKB"] = HelpableActionMap(self, "VirtualKeyboardActions", {
 			"showVirtualKeyboard": (self.keyText, _("Display the virtual keyboard for data entry"))
 		}, prio=-2, description=_("Common Setup Functions"))
@@ -238,6 +238,10 @@ class ConfigListScreen:
 	def handleInputHelpers(self):
 		currConfig = self["config"].getCurrent()
 		if currConfig is not None:
+			if isinstance(currConfig[1], (ConfigInteger, ConfigMacText, ConfigSequence)):
+				self["smsConfigActions"].setEnabled(True)
+			else:
+				self["smsConfigActions"].setEnabled(False)
 			if isinstance(currConfig[1], ConfigSelection):
 				self["menuConfigActions"].setEnabled(True)
 				self["key_menu"].setText(_("MENU"))
@@ -245,13 +249,13 @@ class ConfigListScreen:
 				self["menuConfigActions"].setEnabled(False)
 				self["key_menu"].setText("")
 			if isinstance(currConfig[1], ConfigText):
-				self["textConfigActions"].setEnabled(True)
+				self["smsConfigActions"].setEnabled(True)
 				self.showVKeyboard(True)
 				if "HelpWindow" in self and currConfig[1].help_window and currConfig[1].help_window.instance is not None:
 					helpwindowpos = self["HelpWindow"].getPosition()
 					currConfig[1].help_window.instance.move(ePoint(helpwindowpos[0], helpwindowpos[1]))
 			else:
-				self["textConfigActions"].setEnabled(False)
+				self["smsConfigActions"].setEnabled(False)
 				self.showVKeyboard(False)
 
 	def showVKeyboard(self, state):
