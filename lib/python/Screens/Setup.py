@@ -11,7 +11,7 @@ from Components.Pixmap import Pixmap
 from Components.SystemInfo import SystemInfo
 from Components.Sources.StaticText import StaticText
 from Screens.HelpMenu import HelpableScreen
-from Screens.Screen import Screen
+from Screens.Screen import Screen, ScreenSummary
 from Tools.Directories import SCOPE_CURRENT_SKIN, SCOPE_PLUGINS, SCOPE_SKIN, resolveFilename
 from Tools.LoadPixmap import LoadPixmap
 
@@ -173,12 +173,11 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 		return self["config"].list.index(item) if item in self["config"].list else 0
 
 
-class SetupSummary(Screen):
+class SetupSummary(ScreenSummary):
 	def __init__(self, session, parent):
-		Screen.__init__(self, session, parent=parent)
-		self["SetupTitle"] = StaticText(parent.getTitle())
-		self["SetupEntry"] = StaticText("")
-		self["SetupValue"] = StaticText("")
+		ScreenSummary.__init__(self, session, parent=parent)
+		self["entry"] = StaticText("")
+		self["value"] = StaticText("")
 		if hasattr(self.parent, "onChangedEntry"):
 			if self.addWatcher not in self.onShow:
 				self.onShow.append(self.addWatcher)
@@ -199,8 +198,8 @@ class SetupSummary(Screen):
 			self.parent["config"].onSelectionChanged.remove(self.selectionChanged)
 
 	def selectionChanged(self):
-		self["SetupEntry"].text = self.parent.getCurrentEntry()
-		self["SetupValue"].text = self.parent.getCurrentValue()
+		self["entry"].text = self.parent.getCurrentEntry()
+		self["value"].text = self.parent.getCurrentValue()
 
 
 # Read the setup menu XML file.
