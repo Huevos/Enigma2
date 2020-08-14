@@ -18,13 +18,13 @@
 	</windowstyle>
 
 	<fonts>
-		<!-- pick a funky name for the font, so we don't conflict  -->
+		<!-- Pick a funky name for the font, so we don't conflict. -->
 		<font filename="nmsbd.ttf" name="FdLcD" scale="100"/>
 	</fonts>
 
-<!-- template -->
+<!-- Templates -->
 	<screen name="SummaryClockPanel">
-		<widget source="global.CurrentTime" render="Label" position="0,e-40" size="e,40" font="FdLcD;35" halign="right" valign="bottom" noWrap="1">
+		<widget source="global.CurrentTime" render="Label" position="0,e-40" size="e,40" font="FdLcD;36" halign="right" valign="bottom" noWrap="1">
 			<convert type="ClockToText"/>
 		</widget>
 	</screen>
@@ -108,7 +108,27 @@
 		</widget>
 	</screen>
 
-<!-- main -->
+<!-- Standby -->
+	<screen name="StandbySummary" position="fill" flags="wfNoBorder">
+		<widget source="global.CurrentTime" render="Label" position="0,0" size="220,24" font="FdLcD;22" halign="left"  noWrap="1">
+			<convert type="ClockToText">FullDate</convert>
+		</widget>
+		<widget source="global.CurrentTime" render="Label" position="0,22" size="225,100" font="FdLcD;85" halign="left" noWrap="1">
+			<convert type="ClockToText">Format:%H:%M</convert>
+		</widget>
+		<widget source="global.OnlineStableUpdateState" render="Pixmap" pixmap="update_stable.png" position="135,146" size="30,30" >
+			<convert type="ConditionalShowHide"/>
+		</widget>
+		<widget source="global.OnlineUnstableUpdateState" render="Pixmap" pixmap="update_unstable.png" position="135,146" size="30,30" >
+			<convert type="ConditionalShowHide"/>
+		</widget>
+		<widget source="session.RecordState" render="Pixmap" pixmap="rec.png" position="170,150"  size="50,26">
+			<convert type="ConditionalShowHide"/>
+		</widget>
+		<panel name="SummaryTunerStatusPanel" />
+	</screen>
+
+<!-- Main -->
 	<screen name="InfoBarSummary" position="0,0" size="220,176">
 		<widget source="session.CurrentService" render="Label" position="0,38" size="220,26" font="FdLcD;24" halign="left" noWrap="1" >
 			<convert type="ServiceName">NameOnly</convert>
@@ -128,7 +148,7 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 
-<!-- generic -->
+<!-- Generic Screen -->
 	<screen name="ScreenSummary" position="fill" flags="wfNoBorder">
 		<widget source="Title" render="Label" position="0,38" size="e,27" font="FdLcD;24" noWrap="1" transparent="1" />
 		<panel name="SummaryIconsPanel" />
@@ -136,21 +156,27 @@
 		<panel name="SummaryClockPanel" />
 	</screen>
 
-<!-- menus -->
+<!-- Menu -->
 	<screen name="MenuSummary" position="fill" flags="wfNoBorder">
 		<panel name="ScreenSummary" />
 		<widget source="entry" render="Label" position="0,67" size="e,22" font="FdLcD;19" noWrap="1" transparent="1" />
 	</screen>
 
-<!-- setup -->
+<!-- Setup -->
 	<screen name="SetupSummary" position="fill" flags="wfNoBorder">
 		<panel name="MenuSummary" />
 		<widget source="value" render="Label" position="0,91" size="e,20" font="FdLcD;17" noWrap="1" transparent="1" />
 	</screen>
 
-<!-- skinselector -->
+<!-- Skin Selector -->
 	<screen name="SkinSelectorSummary" position="fill" flags="wfNoBorder">
 		<panel name="MenuSummary" />
+	</screen>
+
+<!-- Plugin Browser -->
+	<screen name="PluginBrowserSummary" position="fill" flags="wfNoBorder">
+		<panel name="MenuSummary" />
+		<widget source="desc" render="Label" position="0,91" size="e,17" font="FdLcD;14" noWrap="1" transparent="1" />
 	</screen>
 
 <!-- movieplayer -->
@@ -214,32 +240,6 @@
 		<panel name="SummaryIconsPanel" />
 		<panel name="SummaryTunerStatusPanel" />
 		<panel name="SummaryClockPanel" />
-	</screen>
-
-<!-- standby -->
-	<screen name="StandbySummary" position="0,0" size="220,176">
-		<widget source="global.CurrentTime" render="Label" position="0,0" size="220,24" font="FdLcD;22" halign="left"  noWrap="1">
-			<convert type="ClockToText">FullDate</convert>
-		</widget>
-		<widget source="global.CurrentTime" render="Label" position="0,22" size="225,100" font="FdLcD;85" halign="left" noWrap="1">
-			<convert type="ClockToText">Format:%H:%M</convert>
-		</widget>
-		<widget source="global.OnlineStableUpdateState" render="Pixmap" pixmap="update_stable.png" position="135,146" size="30,30" >
-			<convert type="ConditionalShowHide"/>
-		</widget>
-		<widget source="global.OnlineUnstableUpdateState" render="Pixmap" pixmap="update_unstable.png" position="135,146" size="30,30" >
-			<convert type="ConditionalShowHide"/>
-		</widget>
-		<widget source="session.RecordState" render="Pixmap" pixmap="rec.png" position="170,150"  size="50,26">
-			<convert type="ConditionalShowHide"/>
-		</widget>
-		<panel name="SummaryTunerStatusPanel" />
-	</screen>
-
-<!-- Plugin browser -->
-	<screen name="PluginBrowserSummary" position="fill" flags="wfNoBorder">
-		<panel name="MenuSummary" />
-		<widget source="desc" render="Label" position="0,91" size="e,17" font="FdLcD;14" noWrap="1" transparent="1" />
 	</screen>
 
 <!-- JobView Summary -->
