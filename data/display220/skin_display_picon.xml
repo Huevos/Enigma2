@@ -146,6 +146,12 @@
 		<widget source="value" render="Label" position="0,91" size="e,20" font="FdLcD;17" noWrap="1" transparent="1" />
 	</screen>
 
+<!-- About -->
+	<screen name="AboutSummary" position="fill" flags="wfNoBorder">
+		<widget source="Title" render="Label" position="0,0" size="e,27" font="FdLcD;24" noWrap="1" transparent="1" />
+		<widget source="about" render="Label" position="0,30" size="e,e-30" font="FdLcD;12" noWrap="1" transparent="1" />
+	</screen>
+
 <!-- Skin Selector -->
 	<screen name="SkinSelectorSummary" position="fill" flags="wfNoBorder">
 		<panel name="MenuSummary" />
