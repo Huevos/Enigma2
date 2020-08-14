@@ -126,6 +126,11 @@
 		<widget source="value" render="Label" position="0,91" size="e,20" font="FdLcD;17" noWrap="1" transparent="1" />
 	</screen>
 
+<!-- skinselector -->
+	<screen name="SkinSelectorSummary" position="fill" flags="wfNoBorder">
+		<panel name="MenuSummary" />
+	</screen>
+
 <!-- movieplayer -->
 	<screen name="InfoBarMoviePlayerSummary" position="0,0" size="220,176">
 		<widget name="statusicon_summary" position="0,138" size="40,38" pixmaps="play.png,pause.png,stop.png,forward.png,backward.png,slow.png" />
