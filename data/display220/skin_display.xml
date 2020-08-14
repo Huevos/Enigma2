@@ -168,6 +168,12 @@
 		<widget source="value" render="Label" position="0,91" size="e,20" font="FdLcD;17" noWrap="1" transparent="1" />
 	</screen>
 
+<!-- About -->
+	<screen name="AboutSummary" position="fill" flags="wfNoBorder">
+		<widget source="Title" render="Label" position="0,0" size="e,27" font="FdLcD;24" noWrap="1" transparent="1" />
+		<widget source="about" render="Label" position="0,30" size="e,e-30" font="FdLcD;12" noWrap="1" transparent="1" />
+	</screen>
+
 <!-- Skin Selector -->
 	<screen name="SkinSelectorSummary" position="fill" flags="wfNoBorder">
 		<panel name="MenuSummary" />
@@ -301,10 +307,6 @@
 	<screen name="MessageBoxSimple_summary" position="0,0" size="220,176">
 		<widget source="parent.Text" render="Label" position="0,0" size="220,176" font="FdLcD;17" halign="center" />
 		<widget source="parent.selectedChoice" render="Label" position="0,135" size="220,28" font="FdLcD;26" halign="center" noWrap="1" />
-	</screen>
-
-	<screen name="AboutSummary" position="0,0" size="220,176">
-		<widget source="AboutText" render="Label" position="0,0" size="220,176" font="FdLcD;11" />
 	</screen>
 
 	<screen name="TimerEditListSummary" position="0,0" size="220,176">
