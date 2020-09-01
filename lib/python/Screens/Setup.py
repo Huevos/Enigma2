@@ -4,6 +4,7 @@ from gettext import dgettext
 from os.path import getmtime, join as pathJoin
 from skin import setups
 
+from Components.ActionMap import HelpableActionMap
 from Components.config import ConfigBoolean, ConfigNothing, ConfigSelection, config
 from Components.ConfigList import ConfigListScreen
 from Components.Label import Label
@@ -38,6 +39,20 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 		if setup:
 			self.skinName.append("Setup_%s" % setup)
 		self.skinName.append("Setup")
+
+		if "key_red" not in self:
+			self["key_red"] = StaticText(_("Cancel"))
+		if "key_green" not in self:
+			self["key_green"] = StaticText(_("Save"))
+		
+		self["configActions"] = HelpableActionMap(self, ["ConfigListActions"], {
+			"cancel": (self.keyCancel, _("Cancel any changed settings and exit")),
+			"close": (self.closeRecursive, _("Cancel any changed settings and exit all menus")),
+			"save": (self.keySave, _("Save all changed settings and exit")),
+			"ok": (self.keySelect, _("Select, toggle, process or edit the current entry")),
+			"select": (self.keySelect, _("Select, toggle, process or edit the current entry"))
+		}, prio=1, description=_("Common Setup Functions"))
+		
 		self.list = []
 		ConfigListScreen.__init__(self, self.list, session=session, on_change=self.changedEntry)
 		self["footnote"] = Label()
