@@ -22,9 +22,45 @@ setupTitles = {}
 
 class Setup(ConfigListScreen, Screen, HelpableScreen):
 	ALLOW_SUSPEND = True
+	skin = ["""
+	<screen name="Setup" position="center,center" size="%d,%d">
+		<widget name="config" position="%d,%d" size="e-%d,%d" enableWrapAround="1" font="Regular;%d" itemHeight="%d" scrollbarMode="showOnDemand" />
+		<widget name="footnote" position="%d,e-%d" size="e-%d,%d" font="Regular;%d" valign="center" />
+		<widget name="description" position="%d,e-%d" size="e-%d,%d" font="Regular;%d" valign="center" />
+		<widget source="key_red" render="Label" position="%d,e-%d" size="%d,%d" backgroundColor="key_red" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_green" render="Label" position="%d,e-%d" size="%d,%d" backgroundColor="key_green" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_menu" render="Label" position="e-%d,e-%d" size="%d,%d" backgroundColor="key_back" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_info" render="Label" position="e-%d,e-%d" size="%d,%d" backgroundColor="key_back" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="VKeyIcon" text="TEXT" render="Label" position="e-%d,e-%d" size="%d,%d" backgroundColor="key_back" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget source="key_help" render="Label" position="e-%d,e-%d" size="%d,%d" backgroundColor="key_back" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget name="setupimage" position="0,0" size="0,0" alphatest="blend" conditional="setupimage" transparent="1" />
+	</screen>""",
+		900, 570,  # screen
+		10, 10, 20, 350, 25, 35,  # config
+		10, 185, 20, 25, 20,  # footnote
+		10, 160, 20, 100, 20,  # description
+		10, 50, 140, 40, 20,  # key_red
+		160, 50, 140, 40, 20,  # key_green
+		360, 50, 80, 40, 20,  # key_menu
+		150, 50, 80, 40, 20,  # key_info
+		180, 50, 80, 40, 20,  # key_text
+		90, 50, 80, 40, 20  # key_help
+	]
 
 	def __init__(self, session, setup, plugin=None, PluginLanguageDomain=None):
-		Screen.__init__(self, session)
+		Screen.__init__(self, session, mandatoryWidgets=["setup", "footnote", "description"])
 		HelpableScreen.__init__(self)
 		self.setup = setup
 		self.plugin = plugin
