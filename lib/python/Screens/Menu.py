@@ -69,6 +69,30 @@ class MenuSummary(ScreenSummary):
 
 class Menu(Screen, HelpableScreen, ProtectedScreen):
 	ALLOW_SUSPEND = True
+	skin = ["""
+	<screen name="Menu" position="center,center" size="%d,%d">
+		<widget source="menu" render="Listbox" position="%d,%d" size="e-%d,%d" enableWrapAround="1" scrollbarMode="showOnDemand">
+			<convert type="TemplatedMultiContent">
+				{
+				"template":
+					[
+					MultiContentEntryText(pos = (%d, 0), size = (%d, %d), font = 0, flags = RT_HALIGN_LEFT | RT_VALIGN_CENTER, text = 0)
+					],
+				"fonts": [parseFont("Regular;%d")],
+				"itemHeight": %d
+				}
+			</convert>
+		</widget>
+		<widget source="key_help" render="Label" position="e-%d,e-%d" size="%d,%d" backgroundColor="key_back" font="Regular;%d" foregroundColor="key_text" halign="center" valign="center">
+			<convert type="ConditionalShowHide" />
+		</widget>
+		<widget name="menuimage" position="0,0" size="0,0" alphatest="blend" conditional="menuimage" transparent="1" />
+	</screen>""",
+		800, 560,  # screen
+		10, 10, 20, 490,  # menu
+		20, 740, 35, 25, 35,  # template
+		90, 50, 80, 40, 20  # key_help
+	]
 
 	def okbuttonClick(self):
 		if self.number:
@@ -205,7 +229,7 @@ class Menu(Screen, HelpableScreen, ProtectedScreen):
 
 
 	def __init__(self, session, parent):
-		Screen.__init__(self, session)
+		Screen.__init__(self, session, mandatoryWidgets=["menu"])
 		HelpableScreen.__init__(self)
 		list = []
 
