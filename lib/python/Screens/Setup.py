@@ -88,7 +88,7 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 			setupImage = resolveFilename(SCOPE_CURRENT_SKIN, setupImage)
 			self.setupImage = LoadPixmap(setupImage)
 			if self.setupImage:
-				self["menuimage"] = Pixmap()
+				self["setupimage"] = Pixmap()
 			else:
 				print("[Setup] Error: Unable to load menu image '%s'!" % setupImage)
 		else:
@@ -115,9 +115,9 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 				if skin and skin != "":
 					self.skinName.insert(0, skin)
 				if config.usage.showScreenPath.value in ("large", "small") and "menuTitle" in setup:
-					title = setup.get("menuTitle", None).encode("UTF-8")
+					title = setup.get("menuTitle", None).encode("UTF-8", errors="ignore")
 				else:
-					title = setup.get("title", None).encode("UTF-8")
+					title = setup.get("title", None).encode("UTF-8", errors="ignore")
 				# If this break is executed then there can only be one setup tag with this key.
 				# This may not be appropriate if conditional setup blocks become available.
 				break
@@ -132,51 +132,63 @@ class Setup(ConfigListScreen, Screen, HelpableScreen):
 		else:
 			print("[Setup] DEBUG: Config list is unchanged!")
 
-	def addItems(self, parentNode):
+	def addItems(self, parentNode, including=True):
 		for element in parentNode:
-			if element.tag and element.tag == "item":
-				itemLevel = int(element.get("level", 0))
-				if itemLevel > config.usage.setup_level.index:  # The item is higher than the current setup level.
-					continue
-				requires = element.get("requires")
-				if requires:
-					negate = requires.startswith("!")
-					if negate:
-						requires = requires[1:]
-					if requires.startswith("config."):
-						item = eval(requires)
-						SystemInfo[requires] = True if item.value and item.value not in ("0", "False", "false") else False
-						clean = True
-					else:
-						clean = False
-					result = bool(SystemInfo.get(requires, False))
-					if clean:
-						SystemInfo.pop(requires, None)
-					if requires and negate == result:  # The item requirements are not met.
-						continue
-				conditional = element.get("conditional")
-				if conditional and not eval(conditional):  # The item conditions are not met.
-					continue
-				if self.pluginLanguageDomain:
-					itemText = dgettext(self.pluginLanguageDomain, element.get("text", "??").encode("UTF-8"))
-					itemDescription = dgettext(self.pluginLanguageDomain, element.get("description", " ").encode("UTF-8"))
-				else:
-					itemText = _(element.get("text", "??").encode("UTF-8"))
-					itemDescription = _(element.get("description", " ").encode("UTF-8"))
-				itemText = itemText.replace("%s %s", "%s %s" % (SystemInfo["MachineBrand"], SystemInfo["MachineName"]))
-				itemDescription = itemDescription.replace("%s %s", "%s %s" % (SystemInfo["MachineBrand"], SystemInfo["MachineName"]))
-				item = eval(element.text or "")
-				if item != "" and not isinstance(item, ConfigNothing):
-					default = _("Default")
-					itemDefault = item.toDisplayString(item.default)
-					itemDescription = "%s  (%s: %s)" % (itemDescription, default, itemDefault) if itemDescription and itemDescription != " " else "%s: '%s'." % (default, itemDefault)
-					self.list.append((itemText, item, itemDescription))  # Add the item to the config list.
-				if item is config.usage.boolean_graphic:
-					self.switch = True
+			if not element.tag:
+				continue
+			if element.tag in ("elif", "else") and including:
+				break  # End of succesful if/elif branch - short-circuit rest of children.
+			include = self.includeElement(element)
+			if element.tag == "item":
+				if including and include:
+					self.addItem(element)
+			elif element.tag == "if":
+				if including:
+					self.addItems(element, including=include)
+			elif element.tag == "elif":
+				including = include
+			elif element.tag == "else":
+				including = True
+
+	def addItem(self, element):
+		if self.pluginLanguageDomain:
+			itemText = dgettext(self.pluginLanguageDomain, element.get("text", "??").encode("UTF-8", errors="ignore"))
+			itemDescription = dgettext(self.pluginLanguageDomain, element.get("description", " ").encode("UTF-8", errors="ignore"))
+		else:
+			itemText = _(element.get("text", "??").encode("UTF-8", errors="ignore"))
+			itemDescription = _(element.get("description", " ").encode("UTF-8", errors="ignore"))
+		itemText = itemText.replace("%s %s", "%s %s" % (SystemInfo["MachineBrand"], SystemInfo["MachineName"]))
+		itemDescription = itemDescription.replace("%s %s", "%s %s" % (SystemInfo["MachineBrand"], SystemInfo["MachineName"]))
+		item = eval(element.text or "")
+		if item != "" and not isinstance(item, ConfigNothing):
+			itemDefault = item.toDisplayString(item.default)
+			itemDescription = _("%s  (Default: %s)") % (itemDescription, itemDefault) if itemDescription and itemDescription != " " else _("Default: '%s'.") % itemDefault
+			self.list.append((itemText, item, itemDescription))  # Add the item to the config list.
+		if item is config.usage.boolean_graphic:
+			self.switch = True
+
+	def includeElement(self, element):
+		itemLevel = int(element.get("level", 0))
+		if itemLevel > config.usage.setup_level.index:  # The item is higher than the current setup level.
+			return False
+		requires = element.get("requires")
+		if requires:
+			negate = requires.startswith("!")
+			if negate:
+				requires = requires[1:]
+			if requires.startswith("config."):
+				item = eval(requires)
+				result = bool(item.value and item.value not in ("0", "False", "false"))
+			else:
+				result = bool(SystemInfo.get(requires, False))
+			if requires and negate == result:  # The item requirements are not met.
+				return False
+		conditional = element.get("conditional")
+		return not conditional or eval(conditional)
 
 	def layoutFinished(self):
 		if self.setupImage:
-			self["menuimage"].instance.setPixmap(self.setupImage)
+			self["setupimage"].instance.setPixmap(self.setupImage)
 		if not self["config"]:
 			print("[Setup] No setup items available!")
 
@@ -249,6 +261,42 @@ class SetupSummary(ScreenSummary):
 # Read the setup XML file.
 #
 def setupDom(setup=None, plugin=None):
+	# Constants for checkItems()
+	ROOT_ALLOWED = ("item", "if")  # Tags allowed in top level of setup entry
+	IF_ALLOWED = ("item", "if", "elif", "else")  # Tags allowed inside <if/>
+	AFTER_ELSE_ALLOWED = ("item", "if")  # Tags allowed after <elif/> or <else/>
+	CHILDREN_ALLOWED = ("if", )  # Tags that may have children
+	TEXT_ALLOWED = ("item", )  # Tags that may have non-whitespace text (or tail)
+
+	def checkItems(parentNode, setupName, allowed=ROOT_ALLOWED):
+		for element in parentNode:
+			if element.tag not in allowed:
+				print("[Setup] Tag '%s' not permitted in '%s'. Permitted: '%s'." % (element.tag, setupName, ", ".join(allowed)))
+				continue
+			if element.tag not in TEXT_ALLOWED:
+				if element.text and not element.text.isspace():
+					print("[Setup] Tag '%s' in '%s' contains text '%s'." % (element.tag, setupName, element.text.strip()))
+				if element.tail and not element.tail.isspace():
+					print("[Setup] Tag '%s' in '%s' has trailing text '%s'." % (element.tag, setupName, element.text.strip()))
+			if element.tag not in CHILDREN_ALLOWED:
+				try:
+					it = element.iter()
+					it.next()  # The element itself
+					it.next()  # First child
+					print("[Setup] Tag '%s' in '%s' contains children where none expected." % (element.tag, setupName))
+				except StopIteration:
+					pass
+			if element.tag == "item":
+				pass
+			elif element.tag == "if":
+				checkItems(element, setupName, allowed=IF_ALLOWED)
+			elif element.tag == "else":
+				allowed = AFTER_ELSE_ALLOWED  # else and elif not permitted after else
+			elif element.tag == "elif":
+				pass
+			else:
+				print("[Setup] Error: Tag '%s' in permitted set in '%s', but not checked! (Permitted: '%s')" % (element.tag, setupName, ", ".join(allowed)))
+
 	setupFileDom = xml.etree.cElementTree.fromstring("<setupxml></setupxml>")
 	setupFile = resolveFilename(SCOPE_PLUGINS, pathJoin(plugin, "setup.xml")) if plugin else resolveFilename(SCOPE_SKIN, "setup.xml")
 	try:
@@ -271,14 +319,15 @@ def setupDom(setup=None, plugin=None):
 					key = setup.get("key", "")
 					if key in setupTitles:
 						print("[Setup] Warning: Setup key '%s' has been redefined!" % key)
-					title = setup.get("menuTitle", "").encode("UTF-8")
+					title = setup.get("menuTitle", "").encode("UTF-8", errors="ignore")
 					if title == "":
-						title = setup.get("title", "").encode("UTF-8")
+						title = setup.get("title", "").encode("UTF-8", errors="ignore")
 						if title == "":
 							print("[Setup] Error: Setup key '%s' title is missing or blank!" % key)
 							title = "** Setup error: '%s' title is missing or blank!" % key
 					setupTitles[key] = _(title)
-					# print("[Setup] DEBUG: XML setup load: key='%s', title='%s', menuTitle='%s', translated title='%s'" % (key, setup.get("title", "").encode("UTF-8"), setup.get("menuTitle", "").encode("UTF-8"), setupTitles[key]))
+					# print("[Setup] DEBUG: XML setup load: key='%s', title='%s', menuTitle='%s', translated title='%s'" % (key, setup.get("title", "").encode("UTF-8", errors="ignore"), setup.get("menuTitle", "").encode("UTF-8", errors="ignore"), setupTitles[key]))
+					checkItems(setup, key)
 			except xml.etree.cElementTree.ParseError as err:
 				fd.seek(0)
 				content = fd.readlines()
@@ -291,9 +340,9 @@ def setupDom(setup=None, plugin=None):
 				print("[Setup] Error: Unable to parse setup data in '%s' - '%s'!" % (setupFile, err))
 	except (IOError, OSError) as err:
 		if err.errno == errno.ENOENT:  # No such file or directory
-			print("[Skin] Warning: Setup file '%s' does not exist!" % setupFile)
+			print("[Setup] Warning: Setup file '%s' does not exist!" % setupFile)
 		else:
-			print("[Skin] Error %d: Opening setup file '%s'! (%s)" % (err.errno, setupFile, err.strerror))
+			print("[Setup] Error %d: Opening setup file '%s'! (%s)" % (err.errno, setupFile, err.strerror))
 	except Exception as err:
 		print("[Setup] Error %d: Unexpected error opening setup file '%s'! (%s)" % (err.errno, setupFile, err.strerror))
 	return setupFileDom
@@ -321,7 +370,8 @@ def getConfigMenuItem(configElement):
 #
 def getSetupTitle(key):
 	setupDom()  # Load or check for an updated setup.xml file.
-	key = str(key)
+	if not isinstance(key, str):
+		key = str(key)
 	title = setupTitles.get(key, None)
 	if title is None:
 		print("[Setup] Error: Setup key '%s' not found in setup file!" % key)
