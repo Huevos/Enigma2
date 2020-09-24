@@ -150,9 +150,24 @@ def InitUsageConfig():
 		savedValue = os.path.join(config.usage.default_path.saved_value, "")
 		if savedValue and savedValue != defaultValue:
 			config.usage.default_path.setChoices([(defaultValue, defaultValue), (savedValue, savedValue)], default=defaultValue)
+			config.usage.default_path.value = savedValue
 	config.usage.default_path.save()
 	config.usage.timer_path = ConfigSelection(default="<default>", choices=[("<default>", "<default>")])
+	config.usage.timer_path.load()
+	if config.usage.timer_path.saved_value:
+		savedValue = os.path.join(config.usage.timer_path.saved_value, "")
+		if savedValue and savedValue != "<default>":
+			config.usage.timer_path.setChoices([(defaultValue, defaultValue), (savedValue, savedValue)], default=defaultValue)
+			config.usage.timer_path.value = savedValue
+	config.usage.timer_path.save()
 	config.usage.instantrec_path = ConfigSelection(default="<default>", choices=[("<default>", "<default>")])
+	config.usage.instantrec_path.load()
+	if config.usage.instantrec_path.saved_value:
+		savedValue = os.path.join(config.usage.instantrec_path.saved_value, "")
+		if savedValue and savedValue != "<default>":
+			config.usage.instantrec_path.setChoices([(defaultValue, defaultValue), (savedValue, savedValue)], default=defaultValue)
+			config.usage.instantrec_path.value = savedValue
+	config.usage.instantrec_path.save()
 	if not os.path.exists(resolveFilename(SCOPE_TIMESHIFT)):
 		try:
 			os.mkdir(resolveFilename(SCOPE_TIMESHIFT), 0755)
