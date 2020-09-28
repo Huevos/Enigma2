@@ -160,15 +160,15 @@ class SkinSelector(Screen, HelpableScreen):
 		self.loadPreview()
 
 	def loadPreview(self):
-		self.currentEntry = self["skins"].getCurrent()
+		currentEntry = self["skins"].getCurrent()
 		self.changedEntry()
-		preview = self.currentEntry[7]
+		preview = currentEntry[7]
 		if not exists(preview):
 			preview = resolveFilename(SCOPE_CURRENT_SKIN, "noprev.png")
 		self.picload.startDecode(preview)
-		resolution = self.currentEntry[5]
+		resolution = currentEntry[5]
 		msg = "" if resolution is None else " %s" % resolution
-		if self.currentEntry[4] == self.config.value:  # Is the current entry the current skin?
+		if currentEntry[4] == self.config.value:  # Is the current entry the current skin?
 			self["description"].setText(_("Press OK to keep the currently selected%s skin.") % msg)
 		else:
 			self["description"].setText(_("Press OK to activate the selected%s skin.") % msg)
@@ -180,8 +180,9 @@ class SkinSelector(Screen, HelpableScreen):
 		self.close(True)
 
 	def keySave(self):
-		label = self.currentEntry[1]
-		skin = self.currentEntry[4]
+		currentEntry = self["skins"].getCurrent()
+		label = currentEntry[1]
+		skin = currentEntry[4]
 		if skin == self.config.value:
 			if skin == self.currentSkin:
 				print("[SkinSelector] Selected skin: '%s' (Unchanged!)" % pathjoin(self.rootDir, skin))
@@ -202,7 +203,7 @@ class SkinSelector(Screen, HelpableScreen):
 
 	def restartGUI(self, answer):
 		if answer is True:
-			self.config.value = self.currentEntry[4]
+			self.config.value = self["skins"].getCurrent()[4]
 			self.config.save()
 			self.session.open(TryQuitMainloop, QUIT_RESTART)
 		self.refreshList()
