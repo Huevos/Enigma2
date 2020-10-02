@@ -18,6 +18,7 @@ from Tools.LoadPixmap import LoadPixmap
 domSetups = {}
 setupModTimes = {}
 setupTitles = {}
+setupTitlesCache = {}
 
 
 class Setup(ConfigListScreen, Screen, HelpableScreen):
@@ -283,11 +284,14 @@ def setupDom(setup=None, plugin=None):
 			del domSetups[setupFile]
 		if setupFile in setupModTimes:
 			del setupModTimes[setupFile]
+		if setupFile in setupTitlesCache:
+			del setupTitlesCache[setupFile]
 		setupTitles = {}
 		return setupFileDom
 	cached = setupFile in domSetups and setupFile in setupModTimes and setupModTimes[setupFile] == modTime
 	print("[Setup] XML%s setup file '%s', using element '%s'%s." % (" cached" if cached else "", setupFile, setup, " from plugin '%s'" % plugin if plugin else ""))
 	if cached:
+		setupTitles = setupTitlesCache.get(setupFile, {})
 		return domSetups[setupFile]
 	try:
 		if setupFile in domSetups:
@@ -332,6 +336,7 @@ def setupDom(setup=None, plugin=None):
 			print("[Setup] Error %d: Opening setup file '%s'! (%s)" % (err.errno, setupFile, err.strerror))
 	except Exception as err:
 		print("[Setup] Error %d: Unexpected error opening setup file '%s'! (%s)" % (err.errno, setupFile, err.strerror))
+	setupTitlesCache[setupFile] = setupTitles
 	return setupFileDom
 
 # Temporary legacy interface.
