@@ -306,6 +306,7 @@ class Wizard(Screen):
 
 	def exit(self):
 		Wizard.instance = None
+		config.save()
 		self.close()
 
 	def getStepWithID(self, id):
