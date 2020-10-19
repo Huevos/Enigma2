@@ -231,29 +231,30 @@ class SkinError(Exception):
 def parseCoordinate(s, e, size=0, font=None):
 	s = s.strip()
 	if s == "center":  # For speed as this can be common case.
-		val = 0 if not size else (e - size) / 2
+		val = 0 if not size else int((e - size) // 2)
 	elif s == "*":
 		return None
 	else:
 		try:
 			val = int(s)  # For speed try a simple number first.
 		except ValueError:
-			if "t" in s:
-				s = s.replace("center", str((e - size) / 2.0))
-			if "e" in s:
-				s = s.replace("e", str(e))
-			if "c" in s:
-				s = s.replace("c", str(e / 2.0))
-			if "w" in s:
-				s = s.replace("w", "*%s" % str(fonts[font][3]))
-			if "h" in s:
-				s = s.replace("h", "*%s" % str(fonts[font][2]))
-			if "%" in s:
-				s = s.replace("%", "*%s" % str(e / 100.0))
+			if ("w" in s or "h" in s) and font is None:
+				print("[Skin] Warning: Coordinate 'w' and/or 'h' used but font is None, default values of '18' and/or '25' assumed!")
+			value = s
+			value = value.replace("center", str((e - size) / 2.0))
+			value = value.replace("e", str(e))
+			value = value.replace("c", str(e / 2.0))
+			value = value.replace("w", "*%s" % (fonts[font][3] if font else 18))  # Based on a typical font size of 20.
+			value = value.replace("h", "*%s" % (fonts[font][2] if font else 25))  # Based on a typical font size of 20.
+			value = value.replace("%", "*%s" % (e / 100.0))
 			try:
-				val = int(s)  # For speed try a simple number first.
+				val = int(value)  # For speed try a simple number first.
 			except ValueError:
-				val = int(eval(s))
+				try:
+					val = int(eval(value))
+				except Exception as err:
+					print("[Skin] %s Error (%s): Coordinate '%s' (evaluated to '%s') can't be evaluated!" % (type(err).__name__, err, s, value))
+					val = 0
 	# print("[Skin] DEBUG: parseCoordinate s='%s', e='%s', size=%s, font='%s', val='%s'." % (s, e, size, font, val))
 	if val < 0:
 		val = 0
