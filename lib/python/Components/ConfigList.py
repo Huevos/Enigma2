@@ -285,7 +285,7 @@ class ConfigListScreen:
 
 	def keySelect(self):
 		if isinstance(self.getCurrentItem(), ConfigBoolean):
-			self.keyToggle()
+			self.keyMenuBoolean() #self.keyToggle()
 		elif isinstance(self.getCurrentItem(), ConfigSelection):
 			self.keyMenu()
 		elif isinstance(self.getCurrentItem(), ConfigText):
@@ -314,6 +314,16 @@ class ConfigListScreen:
 				self.keyMenuCallback, ChoiceBox, title=currConfig[0],
 				list=zip(currConfig[1].description, currConfig[1].choices),
 				selection=currConfig[1].getIndex(),
+				keys=[]
+			)
+
+	def keyMenuBoolean(self):
+		currConfig = self["config"].getCurrent()
+		if currConfig and currConfig[1].enabled and hasattr(currConfig[1], "descriptions"):
+			self.session.openWithCallback(
+				self.keyMenuCallback, ChoiceBox, title=currConfig[0],
+				list=list(zip(currConfig[1].descriptions.values(), currConfig[1].descriptions.keys())),
+				selection=list(currConfig[1].descriptions.keys()).index(currConfig[1].value), # gets the current index as there is no getIndex() method for ConfigBooleans
 				keys=[]
 			)
 
