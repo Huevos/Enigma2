@@ -289,7 +289,7 @@ X509 *certificate_open(const char *filename)
 	return cert;
 }
 
-#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
 int DH_set0_pqg(DH *dh, BIGNUM *p, BIGNUM *q, BIGNUM *g)
 {
 	/* If the fields p and g in d are NULL, the corresponding input
