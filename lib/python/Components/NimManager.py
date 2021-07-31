@@ -17,6 +17,7 @@ from Components.About import about
 
 config.unicable = ConfigSubsection()
 
+
 def orbStr(pos):
 	return pos > 3600 and "N/A" or "%d.%d\xc2\xb0%s" % (pos > 1800 and ((3600 - pos) / 10, (3600 - pos) % 10, "W") or (pos / 10, pos % 10, "E"))
 
@@ -968,7 +969,7 @@ class NimManager:
 				entry["multi_type"] = {}
 			if "supports_blind_scan" not in entry:
 				entry["supports_blind_scan"] = False
-			
+
 			entry["fbc"] = [0, 0, 0] # not fbc
 			if entry["name"] and ("fbc" in entry["name"].lower() or entry["name"] in SystemInfo["HasFBCtuner"]) and entry["frontend_device"] is not None and os.access("/proc/stb/frontend/%d/fbc_id" % entry["frontend_device"], os.F_OK):
 				fbc_number += 1
