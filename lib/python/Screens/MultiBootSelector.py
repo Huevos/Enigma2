@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 from enigma import getDesktop
 from os import mkdir, path, rmdir
 import tempfile
@@ -13,7 +17,7 @@ from Screens.Screen import Screen
 from Screens.Standby import QUIT_REBOOT, TryQuitMainloop
 from Tools.BoundFunction import boundFunction
 from Tools.Directories import copyfile, pathExists
-from Tools.Multiboot import emptySlot, GetCurrentImage, GetImagelist, GetCurrentImageMode, restoreSlots
+from Tools.Multiboot import emptySlot, GetImagelist, GetCurrentImageMode, restoreSlots
 
 
 class MultiBootSelector(Screen, HelpableScreen):
@@ -39,7 +43,7 @@ class MultiBootSelector(Screen, HelpableScreen):
 		Screen.__init__(self, session, mandatoryWidgets=["key_yellow", "key_blue"])
 		HelpableScreen.__init__(self)
 		Screen.setTitle(self, _("MultiBoot Image Selector"))
-		self.skinName = ["MultiBootSelector","Setup"]
+		self.skinName = ["MultiBootSelector", "Setup"]
 		self.tmp_dir = None
 		self["config"] = ChoiceList(list=[ChoiceEntryComponent("", ((_("Retrieving image slots - Please wait...")), "Queued"))])
 		self["description"] = StaticText(_("Press GREEN (Reboot) to switch images, YELLOW (Delete) to erase an image or BLUE (Restore) to restore all deleted images."))
@@ -69,48 +73,50 @@ class MultiBootSelector(Screen, HelpableScreen):
 		Console().ePopen("mount %s %s" % (SystemInfo["MBbootdevice"], self.tmp_dir))
 		self.callLater(self.getImagelist)
 
-
 	def getImagelist(self):
 		self.imagedict = GetImagelist()
 		list = []
 		self.deletedImagesExists = False
-		currentimageslot = GetCurrentImage()
+		currentimageslot = SystemInfo["MultiBootSlot"]
 		mode = GetCurrentImageMode() or 0
-		print "[MultiBootSelector] reboot1 slot:", currentimageslot
+		print("[MultiBootSelector] reboot0 slot:", currentimageslot)
 		current = "  %s" % _("(Current)")
-		slotSingle = _("Slot %s: %s%s")
-		slotMulti = _("Slot %s: %s - %s mode%s")
+		slotSingle = _("Slot%s %s: %s%s")
+		slotMulti = _("Slot%s %s: %s - %s mode%s")
+
 		if self.imagedict:
 			indextot = 0
 			for index, x in enumerate(sorted(self.imagedict.keys())):
 				if self.imagedict[x]["imagename"] == _("Deleted image"):
 					self.deletedImagesExists = True
-				if self.imagedict[x]["imagename"] != _("Empty slot"):
-					if SystemInfo["canMode12"]:
-						list.insert(index, ChoiceEntryComponent("", (slotMulti % (x, self.imagedict[x]["imagename"], "Kodi", current if x == currentimageslot and mode != 12 else ""), (x, 1))))
-						list.append(ChoiceEntryComponent("", (slotMulti % (x, self.imagedict[x]["imagename"], "PiP", current if x == currentimageslot and mode == 12 else ""), (x, 12))))
-						indextot = index + 1
+				if SystemInfo["canMode12"]:
+					if self.imagedict[x]["imagename"] == _("Empty slot"):
+						list.insert(index, ChoiceEntryComponent("", (slotSingle % (x, SystemInfo["canMultiBoot"][x]["slotname"], self.imagedict[x]["imagename"], current if x == currentimageslot else ""), (x, 1))))					
 					else:
-						list.append(ChoiceEntryComponent("", (slotSingle % (x, self.imagedict[x]["imagename"], current if x == currentimageslot else ""), (x, 1))))
+						list.insert(index, ChoiceEntryComponent("", (slotMulti % (x, SystemInfo["canMultiBoot"][x]["slotname"], self.imagedict[x]["imagename"], "Kodi", current if x == currentimageslot and mode != 12 else ""), (x, 1))))
+						list.append(ChoiceEntryComponent("", (slotMulti % (x, SystemInfo["canMultiBoot"][x]["slotname"], self.imagedict[x]["imagename"], "PiP", current if x == currentimageslot and mode == 12 else ""), (x, 12))))
+					indextot = index + 1
+				elif self.imagedict[x]["imagename"] != _("Empty slot"):
+					list.append(ChoiceEntryComponent("", (slotSingle % (x, SystemInfo["canMultiBoot"][x]["slotname"], self.imagedict[x]["imagename"], current if x == currentimageslot else ""), (x, 1))))
 			if SystemInfo["canMode12"]:
 				list.insert(indextot, " ")
 		else:
 			list.append(ChoiceEntryComponent("", ((_("No images found")), "Waiter")))
 		self["config"].setList(list)
-		print "[MultiBootSelector] list 0 = %s" % list 
+		print("[MultiBootSelector] list X = %s" % list)
 
 	def reboot(self):
 		self.currentSelected = self["config"].l.getCurrentSelection()
 		self.slotx = self.slot = self.currentSelected[0][1][0]
-		if self.imagedict[self.slotx]["imagename"] == _("Deleted image"):
+		if self.imagedict[self.slotx]["imagename"] == _("Deleted image")  or self.imagedict[self.slotx]["imagename"] == _("Empty slot"):
 			self.session.open(MessageBox, _("Cannot reboot to deleted image"), MessageBox.TYPE_ERROR, timeout=3)
 			self.getImagelist()
 		elif self.currentSelected[0][1] != "Queued":
 			slot = self.currentSelected[0][1][0]
 			boxmode = self.currentSelected[0][1][1]
-			print "[MultiBootSelector] reboot2 reboot slot = %s, " % slot
-			print "[MultiBootSelector] reboot2 reboot boxmode = %s, " % boxmode
-			print "[MultiBootSelector] reboot3 slotinfo = %s" % SystemInfo["canMultiBoot"]
+			# print("[MultiBootSelector] reboot1 reboot slot = %s, " % slot)
+			# print("[MultiBootSelector] reboot2 reboot boxmode = %s, " % boxmode)
+			# print("[MultiBootSelector] reboot3 slotinfo = %s" % SystemInfo["canMultiBoot"])
 			if SystemInfo["canMode12"]:
 				if "BOXMODE" in SystemInfo["canMultiBoot"][slot]['startupfile']:
 					startupfile = path.join(self.tmp_dir, "%s_%s" % (SystemInfo["canMultiBoot"][slot]['startupfile'].rsplit('_', 1)[0], boxmode))
@@ -126,7 +132,8 @@ class MultiBootSelector(Screen, HelpableScreen):
 
 	def deleteImage(self):
 		self.currentSelected = self["config"].l.getCurrentSelection()
-		if GetCurrentImage() != self.currentSelected[0][1]:
+		self.slot = self.currentSelected[0][1][0]		
+		if SystemInfo["MultiBootSlot"] != self.currentSelected[0][1] and self.imagedict[self.slot]["imagename"] != _("Empty slot"):
 			self.session.openWithCallback(self.deleteImageCallback, MessageBox, "%s:\n%s" % (_("Are you sure you want to delete image:"), self.currentSelected[0][0]), simple=True)
 		else:
 			self.session.open(MessageBox, _("Cannot delete current image"), MessageBox.TYPE_ERROR, timeout=3)
