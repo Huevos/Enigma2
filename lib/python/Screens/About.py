@@ -56,7 +56,7 @@ class About(Screen):
 		self["lab1"] = StaticText(_("Virtuosso Image Xtreme"))
 		self["lab2"] = StaticText(_("By Team ViX"))
 		model = None
-		AboutText = ""
+		AboutText = "Test update: \t1\n"
 		self["lab3"] = StaticText(_("Support at") + " www.world-of-satellite.com")
 
 		AboutText += _("Model:\t%s %s\n") % (getMachineBrand(), getMachineName())
