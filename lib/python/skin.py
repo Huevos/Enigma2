@@ -83,12 +83,11 @@ def InitSkins(booting=True):
 	switchPixmap.clear()
 	scrollbarStyle = None
 	windowStyles.clear()
-	desktop = getDesktop(GUI_SKIN_ID)
 	# Add the emergency skin.  This skin should provide enough functionality
 	# to enable basic GUI functions to work.
-	loadSkin(EMERGENCY_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=desktop, screenID=GUI_SKIN_ID)
+	loadSkin(EMERGENCY_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID)
 	# Add the subtitle skin.
-	loadSkin(SUBTITLE_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=desktop, screenID=GUI_SKIN_ID)
+	loadSkin(SUBTITLE_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID)
 	# Add the front panel / display / lcd skin.
 	processed = []
 	for skin, name in [(config.skin.display_skin.value, "current"), (DEFAULT_DISPLAY_SKIN, "default")]:
@@ -106,7 +105,7 @@ def InitSkins(booting=True):
 		if skin in processed:  # Don't try to add a skin that has already failed.
 			continue
 		config.skin.primary_skin.value = skin
-		if loadSkin(config.skin.primary_skin.value, scope=SCOPE_CURRENT_SKIN, desktop=desktop, screenID=GUI_SKIN_ID):
+		if loadSkin(config.skin.primary_skin.value, scope=SCOPE_CURRENT_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID):
 			currentPrimarySkin = config.skin.primary_skin.value
 			break
 		print("[Skin] Error: Adding %s GUI skin '%s' has failed!" % (name, config.skin.primary_skin.value))
@@ -117,13 +116,13 @@ def InitSkins(booting=True):
 	if isfile(resolveFilename(SCOPE_SKIN, config.skin.primary_skin.value)):
 		name = USER_SKIN_TEMPLATE % dirname(config.skin.primary_skin.value)
 		if isfile(resolveFilename(SCOPE_CURRENT_SKIN, name)):
-			loadedUser = loadSkin(name, scope=SCOPE_CURRENT_SKIN, desktop=desktop, screenID=GUI_SKIN_ID)
+			loadedUser = loadSkin(name, scope=SCOPE_CURRENT_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID)
 	if not loadedUser:
-		loadSkin(USER_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=desktop, screenID=GUI_SKIN_ID)
+		loadSkin(USER_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID)
 
 	# done loading the skin data, set the screen resolution. Once.
 	gMainDC.getInstance().setResolution(xres, yres)
-	desktop.resize(eSize(xres, yres))
+	getDesktop(GUI_SKIN_ID).resize(eSize(xres, yres))
 
 	# notify any other modules about skin reloads
 	if not booting:
@@ -811,7 +810,7 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 		if filename:
 			resolved = resolveFilename(scope, filename, path_prefix=pathSkin)
 			if isfile(resolved):
-				loadSkin(resolved, scope=scope, desktop=desktop, screenID=screenID)
+				loadSkin(resolved, scope=scope, desktop=getDesktop(GUI_SKIN_ID), screenID=screenID)
 			else:
 				raise SkinError("Tag 'include' needs an existing filename, got filename '%s' (%s)" % (filename, resolved))
 
