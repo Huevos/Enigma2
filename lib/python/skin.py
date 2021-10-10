@@ -36,8 +36,7 @@ setups = {}  # Dictionary of images associated with setup menus.
 switchPixmap = {}  # Dictionary of switch images.
 scrollbarStyle = None # When set, a dictionary of scrollbar styles
 windowStyles = {}  # Dictionary of window styles for each screen ID.
-xres = 720
-yres = 576
+resolutions = {}  # Dictionary of screen resolutions for each screen ID.
 
 
 config.skin = ConfigSubsection()
@@ -68,7 +67,7 @@ onLoadCallbacks = []
 
 def InitSkins(booting=True):
 	global currentPrimarySkin, currentDisplaySkin
-	global domScreens, colors, BodyFont, fonts, menus, parameters, setups, switchPixmap, scrollbarStyle, windowStyles, xres, yres
+	global domScreens, colors, BodyFont, fonts, menus, parameters, setups, switchPixmap, scrollbarStyle, windowStyles, resolutions
 	# Reset skin dictionaries. We can reload skins without a restart
 	# Make sure we keep the original dictionaries as many modules now import skin globals explicitly
 	domScreens.clear()
@@ -121,8 +120,10 @@ def InitSkins(booting=True):
 		loadSkin(USER_SKIN, scope=SCOPE_CURRENT_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID)
 
 	# done loading the skin data, set the screen resolution. Once.
-	gMainDC.getInstance().setResolution(xres, yres)
-	getDesktop(GUI_SKIN_ID).resize(eSize(xres, yres))
+	resolution = resolutions.get(GUI_SKIN_ID, (720, 576, 32))
+	if resolution[0] and resolution[1]:
+		gMainDC.getInstance().setResolution(resolution[0], resolution[1])
+		getDesktop(GUI_SKIN_ID).resize(eSize(resolution[0], resolution[1]))
 
 	# notify any other modules about skin reloads
 	if not booting:
@@ -142,7 +143,7 @@ def loadSkinData(desktop):
 
 
 def loadSkin(filename, scope=SCOPE_SKIN, desktop=getDesktop(GUI_SKIN_ID), screenID=GUI_SKIN_ID):
-	global windowStyles
+	global windowStyles, resolution
 	filename = resolveFilename(scope, filename)
 	print("[Skin] Loading skin file '%s'." % filename)
 	try:
@@ -740,7 +741,7 @@ def reloadWindowStyles():
 def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT_SKIN):
 	"""Loads skin data like colors, windowstyle etc."""
 	assert domSkin.tag == "skin", "root element in skin must be 'skin'!"
-	global colors, fonts, menus, parameters, setups, switchPixmap, scrollbarStyle, xres, yres
+	global colors, fonts, menus, parameters, setups, switchPixmap, scrollbarStyle, resolutions
 	for tag in domSkin.findall("output"):
 		scrnID = int(tag.attrib.get("id", GUI_SKIN_ID))
 		if scrnID == GUI_SKIN_ID:
@@ -751,7 +752,8 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 				yres = int(yres) if yres else 576
 				bpp = res.attrib.get("bpp")
 				bpp = int(bpp) if bpp else 32
-				# print("[Skin] DEBUG: Resolution xres=%d, yres=%d, bpp=%d." % (xres, yres, bpp))
+				print("[Skin] Skin resolution is %dx%d colour depth is %d bits." % (xres, yres, bpp))
+				resolutions[scrnID] = (xres, yres, bpp)
 				if bpp != 32:
 					pass  # Load palette (Not yet implemented!)
 
