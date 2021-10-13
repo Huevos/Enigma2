@@ -154,12 +154,17 @@ def loadSkin(filename, scope=SCOPE_SKIN, desktop=getDesktop(GUI_SKIN_ID), screen
 				# For loadSingleSkinData colors, bordersets etc. are applied one after
 				# the other in order of ascending priority.
 				loadSingleSkinData(desktop, screenID, domSkin, filename, scope=scope)
+				resolution = resolutions.get(screenID, (0, 0, 0))
+				print("[Skin] Skin resolution is %dx%d and colour depth is %d bits." % (resolution[0], resolution[1], resolution[2]))
 				for element in domSkin:
 					if element.tag == "screen":  # Process all screen elements.
 						name = element.attrib.get("name", None)
 						if name:  # Without a name, it's useless!
 							scrnID = element.attrib.get("id", None)
 							if scrnID is None or scrnID == screenID:  # If there is a screen ID is it for this display.
+								res = element.attrib.get("resolution", "%s,%s" % (resolution[0], resolution[1]))
+								if res != "0,0":
+									element.attrib["resolution"] = res
 								# print("[Skin] DEBUG: Extracting screen '%s' from '%s'.  (scope='%s')" % (name, filename, scope))
 								domScreens[name] = (element, "%s/" % dirname(filename))
 					elif element.tag == "windowstyle":  # Process the windowstyle element.
@@ -237,8 +242,13 @@ class SkinError(Exception):
 #
 
 
-def parseCoordinate(s, e, size=0, font=None):
+def parseCoordinate(s, e, size=0, font=None, scale=(1, 1)):
 	orig = s = s.strip()
+	if scale[0] != scale[1]:
+		if e and e > 0:
+			e = e * scale[1] / scale[0]
+		if size and size > 0:
+			size = size * scale[1] / scale[0]
 	if s == "center":  # For speed as this can be common case.
 		val = 0 if not size else (e - size) // 2
 	elif s == "*":
@@ -272,7 +282,9 @@ def parseCoordinate(s, e, size=0, font=None):
 				except Exception as err:
 					print("[Skin] %s '%s': Coordinate '%s', processed to '%s', cannot be evaluated!" % (type(err).__name__, err, orig, s))
 					val = 0
-	# print("[Skin] DEBUG: parseCoordinate s='%s', e='%s', size=%s, font='%s', val='%s'." % (s, e, size, font, val))
+	# print("[Skin] DEBUG: parseCoordinate s='%s', e='%s', size=%s, font='%s', scale='', val='%s'." % (s, e, size, font, str(scale), val))
+	if scale[0] != scale[1]:
+		val = int(val * scale[0] / scale[1])
 	return val
 
 
@@ -300,9 +312,10 @@ def parseValuePair(s, scale, object=None, desktop=None, size=None):
 	parentsize = eSize()
 	if object and ("c" in x or "c" in y or "e" in x or "e" in y or "%" in x or "%" in y):  # Need parent size for ce%
 		parentsize = getParentSize(object, desktop)
-	xval = parseCoordinate(x, parentsize.width(), size and size.width() or 0)
-	yval = parseCoordinate(y, parentsize.height(), size and size.height() or 0)
-	return (xval * scale[0][0] // scale[0][1], yval * scale[1][0] // scale[1][1])
+	xval = parseCoordinate(x, parentsize.width(), size and size.width() or 0, scale=scale[0])
+	yval = parseCoordinate(y, parentsize.height(), size and size.height() or 0, scale=scale[1])
+	# print("[Skin] parseValuePair DEBUG: Scaled pair X %s -> %d, Y %s -> %d." % (x, xval, y, yval))
+	return (xval, yval)
 
 
 def parsePosition(s, scale, object=None, desktop=None, size=None):
@@ -339,7 +352,7 @@ def parseFont(s, scale=((1, 1), (1, 1))):
 			print("[Skin] Error: Font '%s' (in '%s') is not defined!  Using 'Body' font ('%s') instead." % (name, s, f[0]))
 			name = f[0]
 			size = f[1] if size is None else size
-	return gFont(name, int(size) * scale[0][0] // scale[0][1])
+	return gFont(name, int(size * scale[1][0] / scale[1][1]))
 
 
 def parseColor(s):
@@ -470,6 +483,9 @@ class AttributeParser:
 		pass
 
 	def objectTypes(self, value):
+		pass
+
+	def resolution(self, value):
 		pass
 
 	def position(self, value):
@@ -728,7 +744,7 @@ def applySingleAttribute(guiObject, desktop, attrib, value, scale=((1, 1), (1, 1
 	AttributeParser(guiObject, desktop, scale).applyOne(attrib, value)
 
 
-def applyAllAttributes(guiObject, desktop, attributes, scale):
+def applyAllAttributes(guiObject, desktop, attributes, scale=((1, 1), (1, 1))):
 	AttributeParser(guiObject, desktop, scale).applyAll(attributes)
 
 
@@ -914,9 +930,8 @@ def loadSingleSkinData(desktop, screenID, domSkin, pathSkin, scope=SCOPE_CURRENT
 				raise SkinError("Tag 'setup' needs key and image, got key='%s' and image='%s'" % (key, image))
 	for tag in domSkin.findall("subtitles"):
 		from enigma import eSubtitleWidget
-		scale = ((1, 1), (1, 1))
 		for substyle in tag.findall("sub"):
-			font = parseFont(substyle.attrib.get("font"), scale)
+			font = parseFont(substyle.attrib.get("font"))
 			col = substyle.attrib.get("foregroundColor")
 			if col:
 				foregroundColor = parseColor(col)
@@ -1009,19 +1024,20 @@ class SizeTuple(tuple):
 
 class SkinContext:
 	def __init__(self, parent=None, pos=None, size=None, font=None):
-		if parent is not None:
-			if pos is not None:
-				pos, size = parent.parse(pos, size, font)
-				self.x, self.y = pos
-				self.w, self.h = size
-			else:
-				self.x = None
-				self.y = None
-				self.w = None
-				self.h = None
+		if parent is not None and pos is not None:
+			pos, size = parent.parse(pos, size, font)
+			self.x, self.y = pos
+			self.w, self.h = size
+			self.scale = parent.scale
+		else:
+			self.x = None
+			self.y = None
+			self.w = None
+			self.h = None
+			self.scale = ((1, 1), (1, 1))
 
 	def __str__(self):
-		return "Context (%s,%s)+(%s,%s) " % (self.x, self.y, self.w, self.h)
+		return "Context (%s,%s)+(%s,%s)" % (self.x, self.y, self.w, self.h)
 
 	def parse(self, pos, size, font):
 		if pos == "fill":
@@ -1031,8 +1047,8 @@ class SkinContext:
 			self.h = 0
 		else:
 			w, h = size.split(",")
-			w = parseCoordinate(w, self.w, 0, font)
-			h = parseCoordinate(h, self.h, 0, font)
+			w = parseCoordinate(w, self.w, 0, font, self.scale[0])
+			h = parseCoordinate(h, self.h, 0, font, self.scale[1])
 			if pos == "bottom":
 				pos = (self.x, self.y + self.h - h)
 				size = (self.w, h)
@@ -1054,7 +1070,7 @@ class SkinContext:
 			else:
 				size = (w, h)
 				pos = pos.split(",")
-				pos = (self.x + parseCoordinate(pos[0], self.w, size[0], font), self.y + parseCoordinate(pos[1], self.h, size[1], font))
+				pos = (self.x + parseCoordinate(pos[0], self.w, size[0], font, self.scale[0]), self.y + parseCoordinate(pos[1], self.h, size[1], font, self.scale[1]))
 		return (SizeTuple(pos), SizeTuple(size))
 
 
@@ -1067,8 +1083,8 @@ class SkinContextStack(SkinContext):
 			size = (self.w, self.h)
 		else:
 			w, h = size.split(",")
-			w = parseCoordinate(w, self.w, 0, font)
-			h = parseCoordinate(h, self.h, 0, font)
+			w = parseCoordinate(w, self.w, 0, font, self.scale[0])
+			h = parseCoordinate(h, self.h, 0, font, self.scale[1])
 			if pos == "bottom":
 				pos = (self.x, self.y + self.h - h)
 				size = (self.w, h)
@@ -1084,7 +1100,7 @@ class SkinContextStack(SkinContext):
 			else:
 				size = (w, h)
 				pos = pos.split(",")
-				pos = (self.x + parseCoordinate(pos[0], self.w, size[0], font), self.y + parseCoordinate(pos[1], self.h, size[1], font))
+				pos = (self.x + parseCoordinate(pos[0], self.w, size[0], font, self.scale[0]), self.y + parseCoordinate(pos[1], self.h, size[1], font, self.scale[1]))
 		return (SizeTuple(pos), SizeTuple(size))
 
 
@@ -1140,6 +1156,8 @@ def readSkin(screen, skin, names, desktop):
 	context.y = s.top()
 	context.w = s.width()
 	context.h = s.height()
+	resolution = tuple([int(x.strip()) for x in myScreen.attrib.get("resolution", "%d,%d" % (context.w, context.h)).split(",")])
+	context.scale = ((context.w, resolution[0]), (context.h, resolution[1]))
 	del s
 	collectAttributes(screen.skinAttributes, myScreen, context, skinPath, ignore=("name",))
 	context = SkinContext(context, myScreen.attrib.get("position"), myScreen.attrib.get("size"))
