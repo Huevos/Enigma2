@@ -1348,14 +1348,14 @@ def findWidgets(name):
 	return widgetSet
 
 
-def getSkinFactor():
+def getSkinFactor(screen=GUI_SKIN_ID):
 	"""
 	Return a scaling factor (float) that can be used to rescale screen displays
 	to suit the current resolution of the screen.  The scales are based on a
 	default screen resolution of HD (720p).  That is the scale factor for a HD
 	screen will be 1.
 	"""
-	skinfactor = getDesktop(GUI_SKIN_ID).size().height() / 720.0
+	skinfactor = getDesktop(screen).size().height() / 720.0
 	# if skinfactor not in [0.8, 1, 1.5, 3, 6]:
 	# 	print("[Skin] Warning: Unexpected result for getSkinFactor '%0.4f'!" % skinfactor)
 	return skinfactor
