@@ -216,8 +216,9 @@ def getActiveSubservicesForCurrentChannel(current_service):
 				if title and "Sendepause" not in title:
 					starttime = datetime.datetime.fromtimestamp(event[0]).strftime('%H:%M')
 					endtime = datetime.datetime.fromtimestamp(event[0] + event[1]).strftime('%H:%M')
-					current_show_name = title + " " + str(starttime) + "-" + str(endtime)
-					activeSubservices.append((current_show_name, subservice))
+					servicename = eServiceReference(subservice).getServiceName()
+					schedule = str(starttime) + "-" + str(endtime)
+					activeSubservices.append((servicename + " " + schedule + " " + title, subservice))
 		return activeSubservices
 
 
@@ -1584,14 +1585,14 @@ class InfoBarEPG:
 		self.defaultINFOType = self.getDefaultINFOtype()
 
 	def selectDefaultEpgPlugin(self):
-		plugins = [(p[0], p[1]) for p in self.getEPGPluginList()]
+		plugins = [(p[1], p[0]) for p in self.getEPGPluginList()]
 		value = config.usage.defaultEPGType.value
 		selection = [i for i, p in enumerate(plugins) if p[0] == value]
 		self.session.openWithCallback(self.defaultEpgPluginChosen, ChoiceBox, title=_("Please select the default action of the EPG button"),
 			list=plugins, skin_name="EPGExtensionsList", selection=selection and selection[0] or 0)
 
 	def selectDefaultInfoPlugin(self):
-		plugins = [(p[0], p[1]) for p in self.getEPGPluginList()]
+		plugins = [(p[1], p[0]) for p in self.getEPGPluginList()]
 		value = config.usage.defaultINFOType.value
 		selection = [i for i, c in enumerate(plugins) if c[0] == value]
 		self.session.openWithCallback(self.defaultInfoPluginChosen, ChoiceBox, title=_("Please select the default action of the INFO button"),
@@ -1599,13 +1600,13 @@ class InfoBarEPG:
 
 	def defaultEpgPluginChosen(self, answer):
 		if answer is not None:
-			config.usage.defaultEPGType.value = answer[0]
+			config.usage.defaultEPGType.value = answer[1]
 			config.usage.defaultEPGType.save() # saving also forces self.defaultEPGTypeNotifier() to update self.defaultEPGType
 			configfile.save()
 
 	def defaultInfoPluginChosen(self, answer):
 		if answer is not None:
-			config.usage.defaultINFOType.value = answer[0]
+			config.usage.defaultINFOType.value = answer[1]
 			config.usage.defaultINFOType.save() # saving also forces self.defaultINFOTypeNotifier() to update self.defaultINFOType
 			configfile.save()
 
@@ -1619,7 +1620,7 @@ class InfoBarEPG:
 		if isMoviePlayerInfoBar(self):
 			self.openEventView()
 		else:
-			plugins = [(p[0], p[2]) for p in self.getEPGPluginList()]
+			plugins = [(p[1], p[2]) for p in self.getEPGPluginList()]
 			plugins.append((_("Select default action of EPG button"), self.selectDefaultEpgPlugin))
 			self.session.open(ChoiceBox, title=_("Please choose an extension..."), callbackList=plugins, skin_name="EPGExtensionsList", reorderConfig="eventinfo_order")
 
@@ -2670,10 +2671,20 @@ class InfoBarExtensions:
 		for p in plugins.getPlugins(PluginDescriptor.WHERE_EXTENSIONSINGLE):
 			p(self)
 
+		self.addExtension(extension=self.getSoftwareUpdate, type=InfoBarExtensions.EXTENSION_LIST)
 		self.addExtension(extension=self.getLogManager, type=InfoBarExtensions.EXTENSION_LIST)
 		self.addExtension(extension=self.getOsd3DSetup, type=InfoBarExtensions.EXTENSION_LIST)
 		self.addExtension(extension=self.getCCcamInfo, type=InfoBarExtensions.EXTENSION_LIST)
 		self.addExtension(extension=self.getOScamInfo, type=InfoBarExtensions.EXTENSION_LIST)
+
+	def getSUname(self):
+		return _("Software Update")
+
+	def getSoftwareUpdate(self):
+		if config.softwareupdate.showinextensions.value == "yes" or config.softwareupdate.showinextensions.value == "available" and config.softwareupdate.updatefound.value:
+			return [((boundFunction(self.getSUname), boundFunction(self.openSoftwareUpdate), lambda: True), None)]
+		else:
+			return []
 
 	def getLMname(self):
 		return _("Log Manager")
@@ -2786,6 +2797,10 @@ class InfoBarExtensions:
 
 	def showTimerList(self):
 		self.session.open(TimerEditList)
+
+	def openSoftwareUpdate(self):
+		from Screens.SoftwareUpdate import UpdatePlugin
+		self.session.open(UpdatePlugin)
 
 	def openLogManager(self):
 		from Screens.LogManager import LogManager
